@@ -91,10 +91,12 @@ const createAnnotationsSidebar = () => {
     </div>
   `
 
-  const docContainer = document.querySelector('.VPDoc .container')
-  if (docContainer) {
-    docContainer.style.position = 'relative'
-    docContainer.appendChild(annotationsContainer)
+  // 添加到 content-container（文章内容容器）而不是外层 container
+  // 这样 right 定位是相对于文章内容的右边缘，位置计算正确
+  const contentContainer = document.querySelector('.VPDoc .container .content-container')
+  if (contentContainer) {
+    contentContainer.style.position = 'relative'
+    contentContainer.appendChild(annotationsContainer)
   }
 
   renderAnnotationItems()
@@ -148,7 +150,7 @@ const calculateAnnotationPositions = () => {
 
   const panelTitleHeight = 48 // .panel-title 高度 + 底部 padding
   const minGap = 16 // 注释之间的最小间距
-  const alignOffset = -28 // 更大的向上偏移：让注释编号和引用标记**垂直中心对齐**（注释普遍偏下，增加向上偏移）
+  const alignOffset = -42 // 更大的向上偏移：让注释编号和引用标记**垂直中心对齐**（注释普遍偏下，增加向上偏移）
 
   // 基准：容器相对于整个页面的位置
   const containerRect = container.getBoundingClientRect()

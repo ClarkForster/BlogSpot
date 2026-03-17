@@ -1228,42 +1228,23 @@ body,
 
 /* 侧边栏容器 - 相对于文章容器绝对定位，随文章一起滚动 */
 .annotations-sidebar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 360px;
-  z-index: 10;
+  position: absolute !important;
+  top: 0 !important;
+  right: -420px !important;
+  width: 400px !important;
+  z-index: 10 !important;
 }
 
-/* 注释面板 - sticky 定位让面板保持可见，整体容器随文章一起滚动 */
+/* 注释面板 - 完全随文章滚动，文章滚到哪里注释就到哪里 */
 .annotations-panel {
-  position: sticky;
-  top: calc(var(--vp-nav-height) + 2rem);
   width: 100%;
-  max-height: calc(100vh - var(--vp-nav-height) - 4rem);
-  overflow-y: auto;
-  overflow-x: hidden;
   padding: 1rem;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--blog-card-border);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06);
-  scrollbar-width: thin;
-  scrollbar-color: rgba(96, 165, 250, 0.3) transparent;
 }
 
-.annotations-panel::-webkit-scrollbar {
-  width: 4px;
-}
-
-.annotations-panel::-webkit-scrollbar-thumb {
-  background: rgba(96, 165, 250, 0.3);
-  border-radius: 999px;
-}
-
-.annotations-panel::-webkit-scrollbar-track {
-  background: transparent;
-}
 
 /* 注释列表 */
 .annotations-list {
@@ -1353,18 +1334,34 @@ body,
   }
 
   .annotations-sidebar {
-    margin-right: calc(-360px - 3rem) !important; /* 移动到容器外面 */
+    right: -420px !important; /* 移动到容器外面，留出20px间隙 */
   }
 
   .VPDoc.has-aside .content-container {
+    margin-left: calc(var(--vp-sidebar-width) + 32px) !important;
     margin-right: 0 !important;
+    padding-left: 0 !important;
     padding-right: 0 !important;
   }
 
   /* 将大纲目录移到文章左侧 */
-  .VPDocAside {
-    left: calc((100vw - var(--vp-layout-max-width)) / 2) !important;
+  .VPDoc .VPDocAside {
+    position: fixed !important;
+    left: calc((100vw - var(--vp-layout-max-width)) / 2 - 16px - var(--vp-sidebar-width)) !important;
     right: auto !important;
+    top: calc(var(--vp-nav-height) + 1rem) !important;
+    width: var(--vp-sidebar-width) !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 2rem) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-bottom: 2rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 1rem !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid var(--blog-card-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06) !important;
   }
 }
 

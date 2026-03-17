@@ -43,7 +43,7 @@ export interface PostRecord {
 declare const data: PostRecord[]
 export { data }
 
-export default createContentLoader('posts/*.md', {
+export default createContentLoader('{posts,articles}/*.md', {
   excerpt: false,
   transform(raw) {
     return raw

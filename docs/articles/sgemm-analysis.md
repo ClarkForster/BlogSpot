@@ -2,7 +2,7 @@
 layout: doc
 title: CUDA SGEMM 性能优化分析
 date: 2026-03-15
-tags: [CUDA, 高性能计算, 性能优化]
+tags: [CUDA, 高性能计算, 性能优化, 异构编程]
 ---
 
 ## 摘要
