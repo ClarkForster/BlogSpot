@@ -143,17 +143,18 @@ const calculateAnnotationPositions = () => {
   if (!annotations.value.length) return
 
   const refElements = document.querySelectorAll('.annotation-ref')
-  const container = document.querySelector('.VPDoc .container') // 侧边栏相对于这个容器定位
+  // 注释栏在 content-container 内部，所以相对于 content-container 计算位置
+  const contentContainer = document.querySelector('.VPDoc .container .content-container')
   const list = document.querySelector('.annotations-sidebar .annotations-list')
 
-  if (!container || !list) return
+  if (!contentContainer || !list) return
 
   const panelTitleHeight = 48 // .panel-title 高度 + 底部 padding
   const minGap = 16 // 注释之间的最小间距
-  const alignOffset = -42 // 更大的向上偏移：让注释编号和引用标记**垂直中心对齐**（注释普遍偏下，增加向上偏移）
+  const alignOffset = -120 // 进一步向上偏移：让注释编号和引用标记**垂直中心对齐**（注释普遍偏下，继续增大向上偏移）
 
-  // 基准：容器相对于整个页面的位置
-  const containerRect = container.getBoundingClientRect()
+  // 基准：content-container 相对于整个页面的位置
+  const containerRect = contentContainer.getBoundingClientRect()
   const scrollTop = window.scrollY || document.documentElement.scrollTop
   const containerTopRelativeToViewport = containerRect.top
   const containerTop = containerTopRelativeToViewport + scrollTop

@@ -22,8 +22,9 @@
   --vp-font-family-ui: 'IBM Plex Sans', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
   --vp-font-family-mono: 'JetBrains Mono', monospace;
 
-  --vp-layout-max-width: 1240px;
-  --blog-content-width: 720px;
+  --vp-layout-max-width: 1680px;
+  --vp-sidebar-width: 240px;
+  --blog-content-width: 960px;
   --blog-radius: 24px;
   --blog-shadow: 0 18px 50px rgba(148, 163, 184, 0.12);
   --blog-card-border: rgba(226, 232, 240, 0.9);
@@ -100,13 +101,16 @@ body,
   transform: translateY(-1px);
 }
 
-.VPDoc.has-aside .content-container,
-.VPDoc .content-container {
-  max-width: var(--blog-content-width) !important;
+html body div.VPDoc.has-aside div.content-container,
+html body div.VPDoc.has-aside .content-container,
+html body div.VPDoc div.content-container,
+html body div.VPDoc .content-container {
+  max-width: 960px !important;
 }
 
-.VPDoc .container {
-  max-width: 1200px;
+html body div.VPDoc div.container,
+html body div.VPDoc .container {
+  max-width: 1680px !important;
 }
 
 .VPDoc {
@@ -1230,8 +1234,8 @@ body,
 .annotations-sidebar {
   position: absolute !important;
   top: 0 !important;
-  right: -420px !important;
-  width: 400px !important;
+  right: -380px !important;
+  width: 360px !important;
   z-index: 10 !important;
 }
 
@@ -1329,17 +1333,26 @@ body,
   }
 
   /* 给文档容器留空间 - 移出容器到右侧 */
-  .VPDoc .container {
+  html body div.VPDoc .container,
+  html body div.VPDoc .container {
     position: relative !important;
+    max-width: 1680px !important;
+  }
+
+  html body div.VPDoc.has-aside .content-container,
+  html body div.VPDoc .content-container,
+  html body div.VPDoc.has-aside .content-container,
+  html body div.VPDoc .content-container {
+    max-width: 960px !important;
   }
 
   .annotations-sidebar {
-    right: -420px !important; /* 移动到容器外面，留出20px间隙 */
+    right: -380px !important; /* 移动到容器外面，留出间隙 */
   }
 
   .VPDoc.has-aside .content-container {
-    margin-left: calc(var(--vp-sidebar-width) + 32px) !important;
-    margin-right: 0 !important;
+    margin-left: calc(var(--vp-sidebar-width) + 48px) !important;
+  margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -1347,7 +1360,7 @@ body,
   /* 将大纲目录移到文章左侧 */
   .VPDoc .VPDocAside {
     position: fixed !important;
-    left: calc((100vw - var(--vp-layout-max-width)) / 2 - 16px - var(--vp-sidebar-width)) !important;
+    left: max(24px, calc((100vw - 1680px) / 2)) !important;
     right: auto !important;
     top: calc(var(--vp-nav-height) + 1rem) !important;
     width: var(--vp-sidebar-width) !important;
@@ -1355,7 +1368,7 @@ body,
     overflow-y: auto !important;
     overflow-x: hidden !important;
     padding-bottom: 2rem !important;
-    padding-left: 1rem !important;
+    padding-left: 1.5rem !important;
     padding-right: 1rem !important;
     padding-top: 1rem !important;
     background: rgba(255, 255, 255, 0.95) !important;
@@ -1373,6 +1386,49 @@ body,
   .vp-doc blockquote {
     display: none !important;
   }
+
+  /* 重置目录定位，使用VitePress默认行为 */
+  .VPDoc .VPDocAside {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    width: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 调整下拉目录菜单定位 */
+  .VPLocalNav {
+    justify-content: flex-start !important;
+  }
+
+  .VPDocOutlineDropdown {
+    margin-right: auto !important;
+    position: relative !important;
+  }
+
+  /* 确保下拉菜单内容不覆盖文章 - 使用完整路径选择器 */
+  .VPLocalNav .VPDocOutlineDropdown .items,
+  .VPLocalNav .VPDocOutlineDropdown > .items,
+  .VPLocalNav .VPDocOutlineDropdown > div.items,
+  .VPLocalNavOutlineDropdown .items,
+  .VPLocalNavOutlineDropdown > .items,
+  .VPLocalNavOutlineDropdown > div.items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown .items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown > .items,
+  div[data-v-b4b7c07e].items,
+  div[class*="items"] {
+    position: fixed !important;
+    left: 24px !important;
+    top: calc(var(--vp-nav-height) + 48px) !important;
+    max-width: 320px !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 80px) !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+  }
 }
 
 /* 小屏幕（<= 960px）：显示完整blockquote，隐藏其他 */
@@ -1385,6 +1441,48 @@ body,
   }
   .vp-doc blockquote {
     display: block !important;
+  }
+
+  /* 重置目录定位，使用VitePress默认行为 */
+  .VPDoc .VPDocAside {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    width: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 确保下拉目录菜单显示在左侧 */
+  .VPLocalNav {
+    justify-content: flex-start !important;
+  }
+
+  .VPDocOutlineDropdown {
+    margin-right: auto !important;
+    position: relative !important;
+  }
+
+  /* 确保下拉菜单内容不覆盖文章 - 使用完整路径选择器 */
+  .VPLocalNav .VPDocOutlineDropdown .items,
+  .VPLocalNav .VPDocOutlineDropdown > .items,
+  .VPLocalNav .VPDocOutlineDropdown > div.items,
+  .VPLocalNavOutlineDropdown .items,
+  .VPLocalNavOutlineDropdown > .items,
+  .VPLocalNavOutlineDropdown > div.items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown .items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown > .items,
+  div[class*="items"] {
+    position: fixed !important;
+    left: 16px !important;
+    top: calc(var(--vp-nav-height) + 48px) !important;
+    max-width: 280px !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 80px) !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
   }
 }
 
