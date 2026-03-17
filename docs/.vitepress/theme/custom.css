@@ -22,9 +22,9 @@
   --vp-font-family-ui: 'IBM Plex Sans', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
   --vp-font-family-mono: 'JetBrains Mono', monospace;
 
-  --vp-layout-max-width: 1680px;
+  --vp-layout-max-width: 1780px;
   --vp-sidebar-width: 240px;
-  --blog-content-width: 960px;
+  --blog-content-width: 1400px;
   --blog-radius: 24px;
   --blog-shadow: 0 18px 50px rgba(148, 163, 184, 0.12);
   --blog-card-border: rgba(226, 232, 240, 0.9);
@@ -105,12 +105,17 @@ html body div.VPDoc.has-aside div.content-container,
 html body div.VPDoc.has-aside .content-container,
 html body div.VPDoc div.content-container,
 html body div.VPDoc .content-container {
-  max-width: 960px !important;
+  max-width: 1400px !important;
+}
+
+html body div.VPDoc .content,
+html body div.VPDoc.has-aside .content {
+  max-width: 100% !important;
 }
 
 html body div.VPDoc div.container,
 html body div.VPDoc .container {
-  max-width: 1680px !important;
+  max-width: 1780px !important;
 }
 
 .VPDoc {
@@ -1336,14 +1341,19 @@ html body div.VPDoc .container {
   html body div.VPDoc .container,
   html body div.VPDoc .container {
     position: relative !important;
-    max-width: 1680px !important;
+    max-width: 1780px !important;
   }
 
   html body div.VPDoc.has-aside .content-container,
   html body div.VPDoc .content-container,
   html body div.VPDoc.has-aside .content-container,
   html body div.VPDoc .content-container {
-    max-width: 960px !important;
+    max-width: 1400px !important;
+  }
+
+  html body div.VPDoc .content,
+  html body div.VPDoc.has-aside .content {
+    max-width: 100% !important;
   }
 
   .annotations-sidebar {
@@ -1351,8 +1361,8 @@ html body div.VPDoc .container {
   }
 
   .VPDoc.has-aside .content-container {
-    margin-left: calc(var(--vp-sidebar-width) + 48px) !important;
-  margin-right: 0 !important;
+    margin-left: calc(var(--vp-sidebar-width) + 12px) !important;
+    margin-right: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -1360,7 +1370,7 @@ html body div.VPDoc .container {
   /* 将大纲目录移到文章左侧 */
   .VPDoc .VPDocAside {
     position: fixed !important;
-    left: max(24px, calc((100vw - 1680px) / 2)) !important;
+    left: max(16px, calc((100vw - 1780px) / 2)) !important;
     right: auto !important;
     top: calc(var(--vp-nav-height) + 1rem) !important;
     width: var(--vp-sidebar-width) !important;
