@@ -151,7 +151,7 @@ const calculateAnnotationPositions = () => {
 
   const panelTitleHeight = 48 // .panel-title 高度 + 底部 padding
   const minGap = 16 // 注释之间的最小间距
-  const alignOffset = -120 // 进一步向上偏移：让注释编号和引用标记**垂直中心对齐**（注释普遍偏下，继续增大向上偏移）
+  const alignOffset = -80 // 向上偏移：让注释编号和引用标记垂直中心对齐
 
   // 基准：content-container 相对于整个页面的位置
   const containerRect = contentContainer.getBoundingClientRect()
