@@ -31,14 +31,8 @@ const initAnnotations = () => {
   if (frontmatter.value.annotations && frontmatter.value.annotations.length > 0) {
     annotations.value = [...frontmatter.value.annotations]
 
-    // 已经由 markdown-it 在服务端生成了引用标记，只需要移除原 blockquote
-    const blockquotes = document.querySelectorAll('.vp-doc blockquote')
-    blockquotes.forEach(blockquote => {
-      if (blockquote.parentNode && blockquote.textContent.trim()) {
-        // blockquote 已经被 markdown-it 处理成引用标记了，这里移除残留
-        blockquote.remove()
-      }
-    })
+    // markdown-it 已经在服务端同时生成了引用标记和原始注释内容
+    // 原始注释内容通过CSS控制在小屏幕下显示，不需要移除
   } else {
     // 降级方案：客户端查找并转换 blockquote
     const blockquotes = document.querySelectorAll('.vp-doc blockquote')
@@ -61,12 +55,15 @@ const initAnnotations = () => {
           index: annotationIndex,
           isInline: false
         })
-        // 替换 blockquote 为上标引用
+        // 同时保留引用标记和原始blockquote
         const refSpan = document.createElement('sup')
         refSpan.className = 'annotation-ref'
         refSpan.setAttribute('data-annotation-id', annotationId)
         refSpan.textContent = annotationIndex.toString()
-        blockquote.parentNode?.replaceChild(refSpan, blockquote)
+        // 给原始blockquote添加类名
+        blockquote.classList.add('annotation-original')
+        // 插入引用标记在blockquote前面
+        blockquote.parentNode?.insertBefore(refSpan, blockquote)
       }
     })
   }

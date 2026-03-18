@@ -1332,8 +1332,9 @@ html body div.VPDoc .container {
 /* ========== 响应式设计 ========== */
 /* 大屏幕（>= 1440px）：显示侧边栏，文章需要为左右栏留空间 */
 @media (min-width: 1440px) {
-  /* 隐藏原文中的blockquote */
-  .vp-doc blockquote {
+  /* 隐藏原文中的blockquote和原始注释 */
+  .vp-doc blockquote,
+  .vp-doc .annotation-original {
     display: none !important;
   }
 
@@ -1459,8 +1460,22 @@ html body div.VPDoc .container {
   .annotation-ref {
     display: none !important;
   }
-  .vp-doc blockquote {
+  .vp-doc blockquote,
+  .vp-doc .annotation-original {
     display: block !important;
+    margin: 1rem 0 !important;
+  }
+
+  /* 行内注释在小屏幕下显示 */
+  .vp-doc .annotation-original-inline {
+    display: inline !important;
+    color: var(--vp-c-text-2);
+    font-size: 0.95em;
+  }
+
+  /* 小屏幕下隐藏引用标记 */
+  .annotation-ref {
+    display: none !important;
   }
 
   /* 重置目录定位，使用VitePress默认行为 */
@@ -1533,6 +1548,24 @@ html body div.VPDoc .container {
 .vp-doc .code-title {
   background-color: #eaeef3 !important;
   border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* 支持center标签 */
+.vp-doc center {
+  text-align: center !important;
+  display: block;
+  margin: 0 auto;
+}
+
+/* 自定义居中类 */
+.text-center {
+  text-align: center !important;
+}
+
+.block-center {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* 文章图片居中对齐 */

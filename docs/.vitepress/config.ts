@@ -42,8 +42,11 @@ function annotationPlugin(md: any) {
 
       env.annotations.push(annotation)
 
-      // 返回上标样式的注释引用标记
-      return `<sup class="annotation-ref" data-annotation-id="${annotationId}">${annotationIndex}</sup>`
+      // 同时保留引用标记和原始blockquote，通过CSS控制显示
+      return `
+        <sup class="annotation-ref" data-annotation-id="${annotationId}">${annotationIndex}</sup>
+        <blockquote class="annotation-original" style="display: none;">${contentHtml}</blockquote>
+      `
     }
 
     // 如果没有内容，使用原始渲染规则
@@ -91,7 +94,8 @@ function annotationPlugin(md: any) {
       const token = state.push('annotation_ref', 'sup', 0)
       token.attrs = [
         ['class', 'annotation-ref'],
-        ['data-annotation-id', annotationId]
+        ['data-annotation-id', annotationId],
+        ['data-content', content]
       ]
       token.content = annotationIndex.toString()
     }
@@ -104,7 +108,12 @@ function annotationPlugin(md: any) {
   md.renderer.rules.annotation_ref = function (tokens: any, idx: number) {
     const token = tokens[idx]
     const id = token.attrs.find((attr: any) => attr[0] === 'data-annotation-id')[1]
-    return `<sup class="annotation-ref" data-annotation-id="${id}">${token.content}</sup>`
+    const content = token.attrs.find((attr: any) => attr[0] === 'data-content')?.[1] || ''
+    // 同时保留引用标记和原始注释内容
+    return `
+      <sup class="annotation-ref" data-annotation-id="${id}">${token.content}</sup>
+      <span class="annotation-original-inline" style="display: none;">（${content}）</span>
+    `
   }
 }
 
