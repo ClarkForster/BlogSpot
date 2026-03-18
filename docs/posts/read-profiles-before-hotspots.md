@@ -4,7 +4,7 @@ date: 2026-03-06
 description: 很多性能优化失败，并不是因为工具不够，而是因为阅读报告的方法错了。
 tags: [性能, profiling, 系统]
 featured: false
-category: 系统与性能
+category: 功能测试
 draft: false
 ---
 

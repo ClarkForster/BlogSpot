@@ -2,6 +2,7 @@
 layout: doc
 title: 右边栏注释功能测试
 date: 2026-03-18
+category: 功能测试
 tags: [测试, 功能演示]
 ---
 

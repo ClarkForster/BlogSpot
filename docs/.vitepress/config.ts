@@ -115,6 +115,7 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   markdown: {
+    math: true,
     config: (md) => {
       md.use(annotationPlugin)
     }

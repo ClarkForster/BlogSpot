@@ -2,6 +2,7 @@
 title: 注释功能测试
 date: 2026-03-15
 description: 测试右边栏注释功能的示例文章
+category: 功能测试
 tags:
   - 测试
   - 功能演示

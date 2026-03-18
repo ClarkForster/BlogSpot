@@ -4,7 +4,7 @@ date: 2026-03-08
 description: 一篇好解释并不只是把知识点列出来，而是安排读者理解它们的顺序。
 tags: [写作, 学习, 方法]
 featured: true
-category: 阅读与写作
+category: 功能测试
 draft: false
 ---
 

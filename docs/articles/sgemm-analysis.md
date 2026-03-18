@@ -2,6 +2,7 @@
 layout: doc
 title: CUDA SGEMM 性能优化分析
 date: 2026-03-15
+category: 工程实践
 tags: [CUDA, 高性能计算, 性能优化, 异构编程]
 ---
 
@@ -31,13 +32,13 @@ TheoreticalFLOPs = 2×NI×NJ×NK = 2*1024*1024*1024 = 2.147GFLOPs
 
 TheoreticalFLOPS_Peak = 82.58 TFLOPS
 
-TheoreticalComputeTime = TheoreticalFLOPs / TheoreticalFLOPS = 2.147 / 82,580 = **25.99*10 us**
+TheoreticalComputeTime = TheoreticalFLOPs / TheoreticalFLOPS = 2.147 / 82,580 = **25.99 × 10 µs**
 
 TheoreticalBytes（min）=((NI×NK)+(NK×NJ)+2×(NI×NJ))×sizeof(DATA_TYPE) = 3*1024*1024*4 = 12,582,912 byte = 12.58 Mb
 
 TheoreticalBandwidth = 1.01 TB/s
 
-**TheoreticalMemTime** = TheoreticalBytes / TheoreticalBandwidth = **11.9*10 us**
+**TheoreticalMemTime** = TheoreticalBytes / TheoreticalBandwidth = **11.9 × 10 µs**
 
 > 可以看到，理论上这是一个compute bound kernel
 
@@ -53,7 +54,7 @@ dram__bytes_read.sum = **12,585,728 byte**
 
 Real_FLOPS = 4.437 TFLOPS
 
-Real_Bandwidth = **25.97 GB/s** （对应计算load_time= **470.5us**）
+Real\_Bandwidth = **25.97 GB/s** （对应计算load_time= **470.5 µs**）
 
 可以看到缓存所用时间占据了 RunTime 的绝大部分，native kernel 是 memory bound
 
@@ -69,7 +70,7 @@ dram__bytes_read.sum = **12,585,728 byte**
 
 Real_FLOPS = 39.11TFLOPS
 
-Real_Bandwidth = **228.88 GB/s** （对应计算load_time= **53.7us**）
+Real\_Bandwidth = **228.88 GB/s** （对应计算load_time= **53.7 µs**）
 
 > 对比可以看到，native kernel在带宽利用上面和cublas差距极大，后面的优化主要以此着手
 
@@ -134,13 +135,13 @@ GPU内存硬件除了Global Memory外还有cache line 2 、cache lline 1/Shared 
 
 ### 相关性能指标：
 
-RealTime =  **406.05 us**
+RealTime =  **406.05 µs**
 
-dram__bytes_read.sum = **12,583,680 byte**
+dram\_\_bytes_read.sum = **12,583,680 byte**
 
-Real_FLOPS = 5.296 TFLOPS
+Real\_FLOPS = 5.296 TFLOPS
 
-Real_Bandwidth = **30.99 GB/s** （对应计算load_time= **396.4us**）
+Real\_Bandwidth = **30.99 GB/s** （对应计算load_time= **396.4 µs**）
 
 > 依旧是 memory bound
 
@@ -197,13 +198,13 @@ Memory accesses per result: K/32 GMEM, K*9/8 SMEM
 
 ### 相关性能指标：
 
-RealTime =  **149.28 us**
+RealTime =  **149.28 µs**
 
-dram__bytes_read.sum = **12,583,552 byte**
+dram\_\_bytes_read.sum = **12,583,552 byte**
 
-Real_FLOPS = 14.406 TFLOPS
+Real\_FLOPS = 14.406 TFLOPS
 
-Real_Bandwidth = **84.29 GB/s** （对应计算load_time= **145.7us**）
+Real\_Bandwidth = **84.29 GB/s** （对应计算load_time= **145.7 µs**）
 
 > 依旧是 memory bound
 
@@ -310,13 +311,13 @@ Memory accesses per result: K/64 GMEM, K/4 SMEM
 
 ### 相关性能指标：
 
-RealTime =  175.23 **us**
+RealTime =  175.23 **µs**
 
-dram__bytes_read.sum = **12,583,808 byte**
+dram\_\_bytes_read.sum = **12,583,808 byte**
 
-Real_FLOPS =  12.273 TFLOPS
+Real\_FLOPS =  12.273 TFLOPS
 
-Real_Bandwidth = **71.81 GB/s** （对应计算load_time= **145.7us**）
+Real\_Bandwidth = **71.81 GB/s** （对应计算load_time= **145.7 µs**）
 
 > 这里由于数据集过小，延迟掩盖效果过低，所以运行时间比Blocktiling-1d要慢，FLOPS也要低
 
@@ -396,19 +397,19 @@ Warp Stall指标均显著减少
 
 ### 相关性能指标：
 
-RealTime = **156.03 us**
+RealTime = **156.03 µs**
 
-dram__bytes_read.sum = **12,583,552 byte**
+dram\_\_bytes_read.sum = **12,583,552 byte**
 
-Real_FLOPS =  13.783 TFLOPS
+Real\_FLOPS =  13.783 TFLOPS
 
-Real_Bandwidth = **80.65 GB/s** （对应计算load_time= **152.3 us**）
+Real\_Bandwidth = **80.65 GB/s** （对应计算load_time= **152.3 µs**）
 
 ## 3.6 Buffering 双缓冲 + WarpTile
 
 从上面的分析可以看出，目前数据的访存开销依旧是kernel开销的主体
 
-在上一个版本的代码中，我们使用了两次 __syncthreads() 来做线程同步，以防止不同线程之间的数据不一致。其中第一个 __syncthreads() 是为了保证读后写（Read-After-Write）的顺序性，这个是无法避免的。
+在上一个版本的代码中，我们使用了两次 `__syncthreads()` 来做线程同步，以防止不同线程之间的数据不一致。其中第一个 `__syncthreads()` 是为了保证读后写（Read-After-Write）的顺序性，这个是无法避免的。
 
 但是对于后一个同步，目的是为了防止数据在处理完之前被其它线程读取，保证写后读（Write-After-Read）的顺序性。
 
@@ -522,7 +523,7 @@ for (uint bk_idx = 0; bk_idx < K; bk_idx += BK)
 
 ![BankConflict-RecReg.png](Sgemm性能分析报告+fe28bc8d-5d63-4f42-8555-03fba772521f/BankConflict-RecReg.png)
 
-# 4. 优化总结
+## 4. 优化总结
 
 本次优化实验采用了共享内存、BlockTiling、向量化操作、双缓存、向量寄存器以及bank conflict技术对Sgemm算子进行优化，优化后的算子整体性能达到cublas的80%左右，最高可达97.5%，具体加速图如下所示。
 
