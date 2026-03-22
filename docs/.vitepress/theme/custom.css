@@ -141,6 +141,12 @@ html body div.VPDoc .container {
   margin: 0 auto;
 }
 
+/* 首页布局微调，匹配视觉变化要求 */
+.standalone-page.home-page .standalone-page__content {
+  max-width: calc(100% - 79px);
+  margin: 18.5px auto 0;
+}
+
 .standalone-page__header {
   display: grid;
   gap: 0.85rem;
