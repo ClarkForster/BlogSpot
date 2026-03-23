@@ -4,6 +4,7 @@ title: CUDA SGEMM 性能优化分析
 date: 2026-03-15
 category: 工程实践
 tags: [CUDA, 高性能计算, 性能优化, 异构编程]
+featured: true
 ---
 
 ## 摘要

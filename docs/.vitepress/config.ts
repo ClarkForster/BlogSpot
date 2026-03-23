@@ -118,6 +118,17 @@ function annotationPlugin(md: any) {
 }
 
 export default defineConfig({
+  vue: {
+    template: {
+      compilerOptions: {
+        onError(err: any) {
+          // MathJax SVG 输出包含 <style> 标签，忽略该 Vue 编译器错误
+          if (err.code === 64) return
+          throw err
+        }
+      }
+    }
+  },
   lang: 'zh-CN',
   title: 'Blogspot',
   description: '一个关于编程、系统和写作的中文技术博客。',
@@ -127,6 +138,25 @@ export default defineConfig({
     math: true,
     config: (md) => {
       md.use(annotationPlugin)
+      // 拦截 MathJax 渲染规则，移除 <style> 标签（避免 Vue 编译器报错）
+      const patchMathRules = () => {
+        const origInline = md.renderer.rules.math_inline
+        const origBlock = md.renderer.rules.math_block
+        if (origInline) {
+          md.renderer.rules.math_inline = (...args: any[]) => {
+            return (origInline as any)(...args).replace(/<style>[\s\S]*?<\/style>/g, '')
+          }
+        }
+        if (origBlock) {
+          md.renderer.rules.math_block = (...args: any[]) => {
+            return (origBlock as any)(...args).replace(/<style>[\s\S]*?<\/style>/g, '')
+          }
+        }
+      }
+      // 在所有插件加载后再 patch（使用 core rule）
+      md.core.ruler.push('patch_math_style', () => {
+        patchMathRules()
+      })
     }
   },
   transformPageData(pageData) {
@@ -155,7 +185,7 @@ export default defineConfig({
       provider: 'local'
     },
     outline: {
-      level: [1, 2, 3],
+      level: [1, 4],
       label: '本页内容'
     },
     docFooter: {

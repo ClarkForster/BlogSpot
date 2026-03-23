@@ -4,6 +4,7 @@ import { withBase } from 'vitepress'
 import { data as posts } from '../data/posts.data'
 
 const getTagHref = (tag: string) => withBase(`/articles?tag=${encodeURIComponent(tag)}`)
+const getCategoryHref = (category: string) => withBase(`/articles?category=${encodeURIComponent(category)}`)
 
 const featuredPosts = computed(() => posts.filter((post) => post.featured).slice(0, 4))
 
@@ -19,7 +20,7 @@ const groupedPosts = computed(() => {
 
   return Array.from(groups.entries()).map(([name, items]) => ({
     name,
-    items: items.slice(0, 4)
+    items: items.slice(0, 2)
   }))
 })
 
@@ -68,7 +69,7 @@ const formatDate = (value: string) =>
         <article v-for="post in featuredPosts" :key="post.url" class="featured-card">
           <p class="post-meta">{{ post.category }} · {{ formatDate(post.date) }}</p>
           <h3><a :href="withBase(post.url)">{{ post.title }}</a></h3>
-          <p class="post-description">{{ post.description }}</p>
+          <p class="post-description">{{ post.description || post.excerpt }}</p>
           <div class="tag-list">
             <a
               v-for="tag in post.tags"
@@ -90,7 +91,7 @@ const formatDate = (value: string) =>
       </div>
       <div class="topic-grid">
         <article v-for="group in groupedPosts" :key="group.name" class="topic-card">
-          <h3>{{ group.name }}</h3>
+          <h3><a :href="getCategoryHref(group.name)">{{ group.name }}</a></h3>
           <ul>
             <li v-for="post in group.items" :key="post.url">
               <a :href="withBase(post.url)">
@@ -116,7 +117,7 @@ const formatDate = (value: string) =>
               <span>{{ post.title }}</span>
               <span class="inline-arrow" aria-hidden="true">→</span>
             </a>
-            <p>{{ post.description }}</p>
+            <p>{{ post.description || post.excerpt }}</p>
           </div>
         </li>
       </ol>

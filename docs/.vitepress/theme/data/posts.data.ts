@@ -1,4 +1,21 @@
 import { createContentLoader } from 'vitepress'
+import fs from 'fs'
+import path from 'path'
+
+// 读取 markdown 文件原始内容
+const getMarkdownContent = (url: string): string => {
+  // 将 URL 转换为文件路径
+  let filePath = url.slice(1) // 去掉前导 /
+  if (!filePath.endsWith('.md')) {
+    filePath += '.md'
+  }
+  const fullPath = path.resolve('docs', filePath)
+  try {
+    return fs.readFileSync(fullPath, 'utf-8')
+  } catch {
+    return ''
+  }
+}
 
 const normalizeDate = (value: unknown) => {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -34,6 +51,7 @@ export interface PostRecord {
   url: string
   date: string
   description: string
+  excerpt: string
   tags: string[]
   featured: boolean
   category: string
@@ -44,21 +62,39 @@ declare const data: PostRecord[]
 export { data }
 
 export default createContentLoader('{posts,articles}/*.md', {
-  excerpt: false,
+  excerpt: true,
   transform(raw) {
     return raw
-      .map(({ url, frontmatter }) => ({
-        title: String(frontmatter.title ?? '未命名文章'),
-        url,
-        date: normalizeDate(frontmatter.date),
-        description: String(frontmatter.description ?? ''),
-        tags: Array.isArray(frontmatter.tags)
-          ? frontmatter.tags.map((tag) => String(tag))
-          : [],
-        featured: Boolean(frontmatter.featured),
-        category: String(frontmatter.category ?? '未分类'),
-        draft: Boolean(frontmatter.draft)
-      }))
+      .map(({ url, frontmatter, excerpt }) => {
+        // 读取原始 markdown 内容
+        const src = getMarkdownContent(url)
+
+        // 从正文提取摘要：去掉 frontmatter，取前 150 字
+        let autoExcerpt = ''
+        if (!frontmatter.description && src) {
+          // 去掉 frontmatter 和 markdown 语法
+          const body = src
+            .replace(/^---[\s\S]*?---\n*/, '')
+            .replace(/[#*`>\[\]!]/g, '')
+            .replace(/\n+/g, ' ')
+            .trim()
+          autoExcerpt = body.slice(0, 150).trim()
+          if (autoExcerpt.length >= 150) autoExcerpt += '...'
+        }
+        return {
+          title: String(frontmatter.title ?? '未命名文章'),
+          url,
+          date: normalizeDate(frontmatter.date),
+          description: String(frontmatter.description ?? ''),
+          excerpt: autoExcerpt,
+          tags: Array.isArray(frontmatter.tags)
+            ? frontmatter.tags.map((tag) => String(tag))
+            : [],
+          featured: Boolean(frontmatter.featured),
+          category: String(frontmatter.category ?? '未分类'),
+          draft: Boolean(frontmatter.draft)
+        }
+      })
       .filter((post) => !post.draft)
       .sort((a, b) => toTimeValue(b.date) - toTimeValue(a.date))
   }
