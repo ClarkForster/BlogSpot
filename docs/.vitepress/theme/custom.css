@@ -503,7 +503,7 @@ html body div.VPDoc .container {
 .topic-card h3,
 .article-main h2 {
   margin: 0;
-  font-size: 1.7rem;
+  font-size: 1.4rem;
 }
 
 .post-meta,
@@ -540,15 +540,29 @@ html body div.VPDoc .container {
 .timeline-list p {
   margin: 0;
   color: var(--vp-c-text-2);
-  line-height: 1.8;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* 文章链接文字间距更紧凑 */
+.home-page .featured-card {
+  gap: 0.6rem;
+}
+
+.home-page .post-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.55;
 }
 
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 0.4rem;
   padding: 0;
-  margin: 0.15rem 0 0;
+  margin: 0.1rem 0 0;
 }
 
 .tag-pill,
@@ -770,7 +784,13 @@ html body div.VPDoc .container {
   }
 
   .standalone-page {
-    padding: 24px 20px 80px;
+    padding: 24px 16px 80px;
+  }
+
+  /* 修复平板上主页内容过小的问题 */
+  .standalone-page.home-page .standalone-page__content {
+    max-width: 100%;
+    margin: 0;
   }
 
   .standalone-page__header {
@@ -799,6 +819,12 @@ html body div.VPDoc .container {
   .hero-primary,
   .hero-secondary {
     width: 100%;
+  }
+
+  /* 修复手机上主页内容过小的问题 */
+  .standalone-page.home-page .standalone-page__content {
+    max-width: 100%;
+    margin: 0;
   }
 }
 
