@@ -171,7 +171,17 @@ export default defineConfig({
     ['meta', { property: 'og:title', content: 'Blogspot' }],
     ['meta', { property: 'og:description', content: '一个关于编程、系统和写作的中文技术博客。' }],
     ['meta', { property: 'og:image', content: '/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#3b82f6' }]
+    ['meta', { name: 'theme-color', content: '#3b82f6' }],
+    // 暗黑模式配置
+    ['script', { id: 'check-dark-mode', type: 'module', innerHTML: `
+      const userTheme = localStorage.getItem('theme') || 'auto'
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      if (userTheme === 'dark' || (userTheme === 'auto' && systemDark)) {
+        document.documentElement.classList.add('dark')
+      }
+    ` }],
+    // 百度统计配置（请替换 'your-site-id' 为实际的百度统计站点ID）
+    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`]
   ],
   themeConfig: {
     siteTitle: 'Blogspot',
@@ -181,6 +191,7 @@ export default defineConfig({
       { text: '简历', link: '/resume' },
       { text: '关于', link: '/about' }
     ],
+    appearance: true,
     search: {
       provider: 'local'
     },

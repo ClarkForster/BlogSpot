@@ -23,7 +23,7 @@ const variantClass = computed(() => {
         </p>
       </header>
 
-      <div class="standalone-page__content vp-doc featured-card blog-card">
+      <div class="standalone-page__content vp-doc featured-card blog-card" :class="{ 'resume-content': pageClasses.includes('resume-page') }">
         <Content />
       </div>
     </div>
