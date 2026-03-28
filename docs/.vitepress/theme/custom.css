@@ -46,6 +46,12 @@
 
 /* 暗黑模式 */
 .dark {
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #93c5fd;
+  --vp-c-brand-3: #3b82f6;
+  --vp-c-brand-dark: #f1f5f9;
+  --vp-c-brand-dark-hover: #60a5fa;
+
   --vp-c-bg: #0f172a;
   --vp-c-bg-alt: #1e293b;
   --vp-c-bg-soft: #334155;
@@ -119,6 +125,56 @@
 .dark .VPNavBar {
   background: rgba(15, 23, 42, 0.9);
   border-bottom-color: rgba(148, 163, 184, 0.1);
+}
+
+.dark .VPNavBarTitle .title,
+.dark .VPNavBarMenuLink,
+.dark .VPNavBarMenuLink:hover,
+.dark .VPNavBarAppearanceButton,
+.dark .VPNavBarAppearanceButton:hover {
+  color: #f1f5f9;
+}
+
+.dark .VPSocialLink {
+  opacity: 0.8;
+}
+
+.dark .VPSocialLink:hover {
+  opacity: 1;
+}
+
+.dark .VPNavBarSearch {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.dark .VPNavBarSearch input {
+  background: rgba(30, 41, 59, 0.8);
+  color: #f1f5f9;
+}
+
+.dark .VPSidebar {
+  background: rgba(15, 23, 42, 0.95);
+  border-right-color: rgba(148, 163, 184, 0.1);
+}
+
+.dark .VPSidebarItem a,
+.dark .VPSidebarItem button {
+  color: #cbd5e1;
+}
+
+.dark .VPSidebarItem a:hover,
+.dark .VPSidebarItem button:hover {
+  color: #f1f5f9;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.dark .VPFooter {
+  background: rgba(15, 23, 42, 0.9);
+  color: #94a3b8;
+}
+
+.dark .VPFooter a {
+  color: #60a5fa;
 }
 
 .dark .hero-kicker,
@@ -1774,7 +1830,7 @@ html body div.VPDoc .container {
 
 .vp-doc .shiki,
 .vp-doc .shiki span {
-  color: #24292e !important;
+  color: var(--code-text, #24292e) !important;
 }
 
 /* 代码块标题栏 */
