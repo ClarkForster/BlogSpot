@@ -180,8 +180,24 @@ export default defineConfig({
         document.documentElement.classList.add('dark')
       }
     ` }],
-    // 百度统计配置（请替换 'your-site-id' 为实际的百度统计站点ID）
-    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`]
+    // 百度统计配置
+    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`],
+    // 不蒜子访问统计
+    ['script', { async: 'async', src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }],
+    // 不蒜子统计显示脚本
+    ['script', {}, `
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          var footer = document.querySelector('.VPFooter') || document.querySelector('.footer') || document.querySelector('footer')
+          if (footer) {
+            var span = document.createElement('span')
+            span.innerHTML = ' &nbsp;|&nbsp; 👀 访问 <span id="busuanzi_value_site_pv">-</span> 次 &nbsp;|&nbsp; 📄 文章 <span id="busuanzi_value_site_uv">-</span> 篇'
+            span.style.cssText = 'margin-left: 1rem; color: var(--vp-c-text-2); font-size: 0.85rem;'
+            footer.appendChild(span)
+          }
+        }, 1500)
+      })
+    `]
   ],
   themeConfig: {
     siteTitle: 'Blogspot',

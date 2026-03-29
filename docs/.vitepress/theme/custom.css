@@ -177,6 +177,13 @@
   color: #60a5fa;
 }
 
+/* 不蒜子统计 */
+.dark #busuanzi_value_site_pv,
+.dark #busuanzi_value_site_uv {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
 .dark .hero-kicker,
 .dark .standalone-page__eyebrow {
   color: #93c5fd;
