@@ -185,18 +185,20 @@ export default defineConfig({
     // 不蒜子访问统计
     ['script', { async: 'async', src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }],
     // 不蒜子统计显示脚本
-    ['script', {}, `
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          var footer = document.querySelector('.VPFooter') || document.querySelector('.footer') || document.querySelector('footer')
-          if (footer) {
+    ['script', { id: 'busuanzi-footer', defer: 'defer' }, `
+      (function() {
+        var footer = document.querySelector('.VPFooter')
+        if (footer) {
+          var existing = footer.querySelector('.busuanzi-stats')
+          if (!existing) {
             var span = document.createElement('span')
+            span.className = 'busuanzi-stats'
             span.innerHTML = ' &nbsp;|&nbsp; 👀 访问 <span id="busuanzi_value_site_pv">-</span> 次 &nbsp;|&nbsp; 📄 文章 <span id="busuanzi_value_site_uv">-</span> 篇'
             span.style.cssText = 'margin-left: 1rem; color: var(--vp-c-text-2); font-size: 0.85rem;'
-            footer.appendChild(span)
+            footer.insertBefore(span, footer.firstChild)
           }
-        }, 1500)
-      })
+        }
+      })()
     `]
   ],
   themeConfig: {
