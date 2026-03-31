@@ -181,9 +181,7 @@ export default defineConfig({
       }
     ` }],
     // 百度统计配置
-    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`],
-    // 不蒜子访问统计
-    ['script', { src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }]
+    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`]
   ],
   themeConfig: {
     siteTitle: 'Blogspot',
@@ -212,7 +210,7 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/yourname/blogspot' }
     ],
     footer: {
-      message: '用 Markdown 写作，用 Git 发布。',
+      message: '用 Markdown 写作，用 Git 发布。<span id="busuanzi_site_pv" style="display:inline;margin-left:8px;font-size:0.85rem;"><span id="busuanzi_value_site_pv" style="font-weight:600;">-</span> 次访问</span>',
       copyright: 'Copyright © 2026 Blogspot'
     }
   },
