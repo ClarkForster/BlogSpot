@@ -181,7 +181,9 @@ export default defineConfig({
       }
     ` }],
     // 百度统计配置
-    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`]
+    ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`],
+    // 不蒜子访问统计
+    ['script', { src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }]
   ],
   themeConfig: {
     siteTitle: 'Blogspot',
