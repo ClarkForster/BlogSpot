@@ -183,30 +183,7 @@ export default defineConfig({
     // 百度统计配置
     ['script', {}, `var _hmt = _hmt || [];(function() {var hm = document.createElement("script");hm.src = "https://hm.baidu.com/hm.js?a6b62f3309796a5ff179b9941c108d59";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm, s);})();`],
     // 不蒜子访问统计
-    ['script', { src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }],
-    // 不蒜子统计显示脚本
-    ['script', {}, `
-      (function() {
-        function addBusuanzi() {
-          var footer = document.querySelector('.VPFooter .footer-container')
-          if (!footer) return false
-          if (footer.querySelector('.busuanzi-stats')) return true
-          var span = document.createElement('span')
-          span.className = 'busuanzi-stats'
-          span.innerHTML = '👀 访问 <span id="busuanzi_value_site_pv">-</span> 次 &nbsp; 📄 文章 <span id="busuanzi_value_site_uv">-</span> 篇'
-          span.style.cssText = 'margin-left: 1rem; color: var(--vp-c-text-2); font-size: 0.85rem; white-space: nowrap;'
-          footer.style.flexWrap = 'wrap'
-          footer.appendChild(span)
-          return true
-        }
-        if (!addBusuanzi()) {
-          var observer = new MutationObserver(function() {
-            if (addBusuanzi()) observer.disconnect()
-          })
-          observer.observe(document.body, { childList: true, subtree: true })
-        }
-      })()
-    `]
+    ['script', { src: '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js' }]
   ],
   themeConfig: {
     siteTitle: 'Blogspot',

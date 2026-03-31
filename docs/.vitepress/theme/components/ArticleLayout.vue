@@ -388,6 +388,7 @@ const clearHighlights = () => {
 onMounted(async () => {
   await nextTick()
   setTimeout(initAnnotations, 300)
+  setTimeout(initBusuanzi, 500)
 })
 
 watch(() => route.path, async () => {
@@ -398,6 +399,21 @@ watch(() => route.path, async () => {
 onUnmounted(() => {
   removeAnnotationsSidebar()
 })
+
+// 添加不蒜子统计
+const initBusuanzi = () => {
+  const footer = document.querySelector('.VPFooter .container')
+  if (!footer || footer.querySelector('.busuanzi-stats')) return
+
+  const stats = document.createElement('span')
+  stats.className = 'busuanzi-stats'
+  stats.innerHTML = '👀 访问 <span id="busuanzi_value_site_pv">-</span> 次 &nbsp; 📄 文章 <span id="busuanzi_value_site_uv">-</span> 篇'
+  stats.style.cssText = 'margin-left: 1rem; color: var(--vp-c-text-2); font-size: 0.85rem; white-space: nowrap;'
+  footer.style.display = 'flex'
+  footer.style.flexWrap = 'wrap'
+  footer.style.gap = '0.5rem'
+  footer.appendChild(stats)
+}
 </script>
 
 <template>
