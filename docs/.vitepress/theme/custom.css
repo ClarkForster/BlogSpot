@@ -177,7 +177,22 @@
   color: #60a5fa;
 }
 
-/* 不蒜子统计 */
+
+.VPNavBarSearch.search {
+  flex: 0 1 auto;
+}
+
+.VPNavBarSearch.search .DocSearch-Button {
+  width: auto;
+  min-width: 0;
+  max-width: 220px;
+}
+
+@media (max-width: 960px) {
+  .VPNavBarSearch.search .DocSearch-Button {
+    max-width: 180px;
+  }
+}
 .dark #busuanzi_value_site_pv,
 .dark #busuanzi_value_site_uv {
   color: var(--vp-c-text-1);
@@ -1534,8 +1549,8 @@ html body div.VPDoc .container {
 /* 侧边栏容器 - 相对于文章容器绝对定位，随文章一起滚动 */
 .annotations-sidebar {
   position: absolute !important;
-  top: 0 !important;
-  right: -420px !important;
+  top: 4px !important;
+  right: -388px !important;
   width: 340px !important;
   z-index: 10 !important;
 }
@@ -1646,7 +1661,7 @@ html body div.VPDoc .container {
   html body div.VPDoc .content-container,
   html body div.VPDoc.has-aside .content-container,
   html body div.VPDoc .content-container {
-  max-width: min(680px, calc(100vw - 240px - 340px - 120px)) !important;
+    max-width: min(680px, calc(100vw - 240px - 340px - 120px)) !important;
     width: auto !important;
   }
 
@@ -1656,7 +1671,7 @@ html body div.VPDoc .container {
   }
 
   .annotations-sidebar {
-    right: -420px !important; /* 移动到容器外面，留出间隙 */
+    right: -388px !important; /* 移动到容器外面，留出间隙 */
   }
 
   .VPDoc.has-aside .content-container {
@@ -1684,6 +1699,16 @@ html body div.VPDoc .container {
     border: 1px solid var(--blog-card-border) !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06) !important;
+  }
+
+  .dark .VPDoc .VPDocAside {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: var(--vp-c-divider-light) !important;
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.45) !important;
+
+    /* 只在目录区域内提升 outline 链接对比度（不影响正文链接） */
+    --vp-c-text-2: #e2e8f0;
+    --vp-c-text-1: #ffffff;
   }
 }
 
