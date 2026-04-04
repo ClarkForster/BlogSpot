@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { defineConfig } from 'vitepress'
 
 // 注释数据结构
@@ -6,6 +8,59 @@ interface Annotation {
   content: string
   index: number
   isInline: boolean
+}
+
+interface SearchSection {
+  titles: string[]
+  text: string
+}
+
+function getFrontmatterTitle(relativePath: string): string {
+  const markdownPath = path.resolve('docs', relativePath.replace(/^\//, ''))
+
+  try {
+    const source = fs.readFileSync(markdownPath, 'utf-8')
+    const frontmatterMatch = source.match(/^---\n([\s\S]*?)\n---/)
+    const titleMatch = frontmatterMatch?.[1].match(/^title:\s*(.+)$/m)
+
+    return titleMatch?.[1]?.trim().replace(/^['"]|['"]$/g, '') ?? ''
+  } catch {
+    return ''
+  }
+}
+
+function extractSearchTitle(relativePath: string, html: string): string {
+  const headingMatch = html.match(/<h1[^>]*>(.*?)<\/h1>/i)
+  const headingTitle = (headingMatch?.[1] ?? '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .trim()
+
+  if (headingTitle) {
+    return headingTitle
+  }
+
+  const frontmatterTitle = getFrontmatterTitle(relativePath)
+
+  if (frontmatterTitle) {
+    return frontmatterTitle
+  }
+
+  return path.basename(relativePath, '.md')
+}
+
+function splitIntoTitleOnlySections(relativePath: string, html: string): SearchSection[] {
+  const title = extractSearchTitle(relativePath, html)
+
+  if (!title) {
+    return []
+  }
+
+  return [{
+    titles: [title],
+    text: ''
+  }]
 }
 
 // markdown-it 插件配置
@@ -164,6 +219,15 @@ export default defineConfig({
     if (pageData.env && pageData.env.annotations && pageData.env.annotations.length > 0) {
       pageData.frontmatter.annotations = pageData.env.annotations
     }
+
+    // 为 resume/ 子页面使用 StandalonePageLayout 作为布局
+    if (pageData.relativePath.startsWith('resume/') && pageData.relativePath.endsWith('.md')) {
+      pageData.frontmatter.layout = 'StandalonePageLayout'
+      pageData.frontmatter.pageType = 'standalone'
+      pageData.frontmatter.class = 'resume-page no-resume-outline'
+      pageData.frontmatter.outline = false
+      pageData.frontmatter.standaloneHeader = false
+    }
   },
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
@@ -195,7 +259,18 @@ export default defineConfig({
     ],
     appearance: true,
     search: {
-      provider: 'local'
+      provider: 'local',
+      options: {
+        miniSearch: {
+          _splitIntoSections: splitIntoTitleOnlySections,
+          searchOptions: {
+            boost: {
+              title: 4,
+              titles: 1
+            }
+          }
+        }
+      }
     },
     outline: {
       level: [1, 4],

@@ -30,4 +30,4 @@ export const resumeVersions: ResumeVersionRecord[] = [
   }
 ]
 
-export const latestResumeVersion = resumeVersions.find((version) => version.year === 2025) ?? resumeVersions[resumeVersions.length - 1]
+export const latestResumeVersion = resumeVersions[resumeVersions.length - 1]

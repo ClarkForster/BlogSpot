@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { withBase } from 'vitepress'
+import { computed } from 'vue'
+import { useData, withBase } from 'vitepress'
 import { latestResumeVersion, resumeVersions } from '../data/resume'
 
+const { page } = useData()
+
 const getVersionHref = (path: string) => withBase(path)
+
+const activeResumeYear = computed(() => {
+  const match = page.value.relativePath.match(/^resume\/(\d{4})\.md$/)
+  return match ? Number(match[1]) : latestResumeVersion.year
+})
 </script>
 
 <template>
@@ -17,9 +25,9 @@ const getVersionHref = (path: string) => withBase(path)
           v-for="version in resumeVersions"
           :key="version.year"
           class="resume-node"
-          :class="{ active: version.year === latestResumeVersion.year }"
+          :class="{ active: version.year === activeResumeYear }"
           :href="getVersionHref(version.path)"
-          :aria-current="version.year === latestResumeVersion.year ? 'page' : undefined"
+          :aria-current="version.year === activeResumeYear ? 'page' : undefined"
         >
           <span class="resume-node-dot" aria-hidden="true"></span>
           <span class="resume-node-year">{{ version.year }}</span>
