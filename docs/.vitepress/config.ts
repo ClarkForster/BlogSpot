@@ -100,7 +100,7 @@ function annotationPlugin(md: any) {
       // 同时保留引用标记和原始blockquote，通过CSS控制显示
       return `
         <sup class="annotation-ref" data-annotation-id="${annotationId}">${annotationIndex}</sup>
-        <blockquote class="annotation-original" style="display: none;">${contentHtml}</blockquote>
+        <blockquote class="annotation-original" data-annotation-index="${annotationIndex}" style="display: none;">${contentHtml}</blockquote>
       `
     }
 

@@ -18,8 +18,12 @@ interface Annotation {
 const annotations = ref<Annotation[]>([])
 const isArticleLayout = ref(false)
 const activeAnnotationId = ref<string | null>(null)
+const annotationMode = ref<'sidebar' | 'inline'>('inline')
 let annotationsContainer: HTMLElement | null = null
 let resizeObserver: ResizeObserver | null = null
+let initTimeout: ReturnType<typeof setTimeout> | null = null
+let sidebarHost: HTMLElement | null = null
+let sidebarHostPrevPosition: string | null = null
 
 // 初始化注释
 const initAnnotations = () => {
@@ -38,7 +42,7 @@ const initAnnotations = () => {
     const blockquotes = document.querySelectorAll('.vp-doc blockquote')
     if (blockquotes.length === 0) {
       isArticleLayout.value = false
-      removeAnnotationsSidebar()
+      resetToInlineMode()
       return
     }
 
@@ -62,17 +66,116 @@ const initAnnotations = () => {
         refSpan.textContent = annotationIndex.toString()
         // 给原始blockquote添加类名
         blockquote.classList.add('annotation-original')
+        blockquote.setAttribute('data-annotation-index', annotationIndex.toString())
         // 插入引用标记在blockquote前面
         blockquote.parentNode?.insertBefore(refSpan, blockquote)
       }
     })
   }
 
-  // 创建侧边栏
+  // 根据可用宽度选择模式（sidebar / inline）
   nextTick(() => {
-    createAnnotationsSidebar()
-    calculateAnnotationPositions()
+    updateAnnotationMode({ recomputePositions: true })
   })
+}
+
+const setRootAnnotationModeClass = (mode: 'sidebar' | 'inline') => {
+  document.documentElement.classList.toggle('annotations-mode--sidebar', mode === 'sidebar')
+  document.documentElement.classList.toggle('annotations-mode--inline', mode === 'inline')
+}
+
+let annotationResizeTimeout: ReturnType<typeof setTimeout> | null = null
+
+const scheduleAnnotationRecompute = () => {
+  if (annotationResizeTimeout) {
+    clearTimeout(annotationResizeTimeout)
+  }
+
+  annotationResizeTimeout = setTimeout(() => {
+    updateAnnotationMode({ recomputePositions: true })
+  }, 100)
+}
+
+const resetToInlineMode = () => {
+  annotationMode.value = 'inline'
+  setRootAnnotationModeClass('inline')
+  removeAnnotationsSidebar()
+}
+
+const canUseSidebarMode = (): boolean => {
+  if (window.innerWidth < 1440) {
+    return false
+  }
+
+  const contentContainer = document.querySelector('.VPDoc .container .content-container') as HTMLElement | null
+  if (!contentContainer) return false
+
+  const rect = contentContainer.getBoundingClientRect()
+  const spaceRight = window.innerWidth - rect.right
+
+  const sidebarWidth = 340
+  const safeGap = 48
+
+  return spaceRight >= sidebarWidth + safeGap
+}
+
+const attachBlockAnnotationRefsToPreviousBlock = () => {
+  const refs = document.querySelectorAll('sup.annotation-ref:not(.annotation-ref--block)')
+  refs.forEach(ref => {
+    const next = ref.nextElementSibling
+    if (!(next instanceof HTMLElement)) return
+
+    // 仅处理“块级注释（blockquote）”的引用标记：它在 DOM 中紧邻原始 blockquote
+    if (next.tagName !== 'BLOCKQUOTE' || !next.classList.contains('annotation-original')) return
+
+    let host = ref.previousElementSibling as HTMLElement | null
+    while (host && host.tagName === 'SUP' && host.classList.contains('annotation-ref')) {
+      host = host.previousElementSibling as HTMLElement | null
+    }
+
+    if (!host) return
+
+    host.classList.add('annotation-ref-host')
+    ref.classList.add('annotation-ref--block')
+    host.appendChild(ref)
+  })
+}
+
+const updateAnnotationMode = ({ recomputePositions }: { recomputePositions: boolean }) => {
+  if (!isArticleLayout.value || annotations.value.length === 0) {
+    resetToInlineMode()
+    return
+  }
+
+  const desiredMode: 'sidebar' | 'inline' = canUseSidebarMode() ? 'sidebar' : 'inline'
+  const modeChanged = desiredMode !== annotationMode.value
+
+  if (modeChanged) {
+    annotationMode.value = desiredMode
+    setRootAnnotationModeClass(desiredMode)
+
+    if (desiredMode === 'sidebar') {
+      attachBlockAnnotationRefsToPreviousBlock()
+      createAnnotationsSidebar()
+      calculateAnnotationPositions()
+    } else {
+      removeAnnotationsSidebar()
+    }
+
+    return
+  }
+
+  if (annotationMode.value === 'sidebar') {
+    attachBlockAnnotationRefsToPreviousBlock()
+
+    if (!document.querySelector('.annotations-sidebar')) {
+      createAnnotationsSidebar()
+    }
+
+    if (recomputePositions) {
+      calculateAnnotationPositions()
+    }
+  }
 }
 
 // 创建注释侧边栏
@@ -90,8 +193,10 @@ const createAnnotationsSidebar = () => {
 
   // 添加到 content-container（文章内容容器）而不是外层 container
   // 这样 right 定位是相对于文章内容的右边缘，位置计算正确
-  const contentContainer = document.querySelector('.VPDoc .container .content-container')
+  const contentContainer = document.querySelector('.VPDoc .container .content-container') as HTMLElement | null
   if (contentContainer) {
+    sidebarHost = contentContainer
+    sidebarHostPrevPosition = contentContainer.style.position
     contentContainer.style.position = 'relative'
     contentContainer.appendChild(annotationsContainer)
   }
@@ -105,13 +210,16 @@ const renderAnnotationItems = () => {
   const list = document.querySelector('.annotations-sidebar .annotations-list')
   if (!list) return
 
-  list.innerHTML = annotations.value.map(annotation => `
-    <div class="annotation-item" data-annotation-id="${annotation.id}"
-         style="position: absolute; top: ${annotation.top || 0}px; left: 0; right: 0;">
-      <div class="annotation-number">${annotation.index}</div>
-      <div class="annotation-content">${annotation.content}</div>
-    </div>
-  `).join('')
+  list.innerHTML = annotations.value.map(annotation => {
+    const top = annotation.top ?? (annotation.index - 1) * 84
+    return `
+      <div class="annotation-item" data-annotation-id="${annotation.id}"
+           style="position: absolute; top: ${top}px; left: 0; right: 0;">
+        <div class="annotation-number">${annotation.index}</div>
+        <div class="annotation-content">${annotation.content}</div>
+      </div>
+    `
+  }).join('')
 }
 
 // 更新注释位置
@@ -132,6 +240,13 @@ const removeAnnotationsSidebar = () => {
   if (existing) {
     existing.remove()
   }
+
+  if (sidebarHost) {
+    sidebarHost.style.position = sidebarHostPrevPosition ?? ''
+    sidebarHost = null
+    sidebarHostPrevPosition = null
+  }
+
   removeEventListeners()
 }
 
@@ -170,7 +285,7 @@ const calculateAnnotationPositions = () => {
       // (引用页面位置 - 容器页面位置) = 引用在容器中的相对位置
       // 加上 panel 标题高度（已经包含了panel的padding）
       // 再向上偏移让注释编号和引用标记在同一水平线上
-      annotation.top = (elTop - containerTop) + panelTitleHeight + alignOffset
+      annotation.top = Math.max(0, (elTop - containerTop) + panelTitleHeight + alignOffset)
     }
   })
 
@@ -180,11 +295,19 @@ const calculateAnnotationPositions = () => {
   // 第三步：获取每个注释的实际渲染高度
   const annotationItems = list.querySelectorAll('.annotation-item')
   const annotationHeights = new Map<string, number>()
+  const listWidth = (list as HTMLElement).clientWidth
 
   annotationItems.forEach(item => {
+    const element = item as HTMLElement
+    element.style.left = '0'
+    element.style.right = '0'
+    element.style.maxWidth = `${listWidth}px`
+    element.style.width = `${listWidth}px`
+    element.style.boxSizing = 'border-box'
+
     const id = item.getAttribute('data-annotation-id')
     if (id) {
-      const height = (item as HTMLElement).offsetHeight
+      const height = element.offsetHeight
       annotationHeights.set(id, height)
     }
   })
@@ -277,17 +400,12 @@ const addEventListeners = () => {
   document.addEventListener('mouseout', handleMouseOut)
   document.addEventListener('click', handleAnnotationClick)
   window.addEventListener('scroll', handleScroll, { passive: true })
-  window.addEventListener('resize', handleResize)
 
   // 监听文档内容变化，动态更新注释位置
   const doc = document.querySelector('.vp-doc')
   if (doc && ResizeObserver) {
     resizeObserver = new ResizeObserver(() => {
-      // 防抖处理
-      clearTimeout((window as any).annotationResizeTimeout)
-      ;(window as any).annotationResizeTimeout = setTimeout(() => {
-        calculateAnnotationPositions()
-      }, 100)
+      scheduleAnnotationRecompute()
     })
     resizeObserver.observe(doc)
   }
@@ -298,13 +416,16 @@ const removeEventListeners = () => {
   document.removeEventListener('mouseout', handleMouseOut)
   document.removeEventListener('click', handleAnnotationClick)
   window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('resize', handleResize)
 
   if (resizeObserver) {
     resizeObserver.disconnect()
     resizeObserver = null
   }
-  clearTimeout((window as any).annotationResizeTimeout)
+
+  if (annotationResizeTimeout) {
+    clearTimeout(annotationResizeTimeout)
+    annotationResizeTimeout = null
+  }
 }
 
 const handleMouseOver = (e: MouseEvent) => {
@@ -331,11 +452,7 @@ const handleMouseOut = () => {
 }
 
 const handleResize = () => {
-  // 窗口大小变化时重新计算注释位置
-  clearTimeout((window as any).annotationResizeTimeout)
-  ;(window as any).annotationResizeTimeout = setTimeout(() => {
-    calculateAnnotationPositions()
-  }, 100)
+  scheduleAnnotationRecompute()
 }
 
 const handleScroll = () => {
@@ -385,18 +502,37 @@ const clearHighlights = () => {
   })
 }
 
-onMounted(async () => {
+const scheduleInitAnnotations = async () => {
   await nextTick()
-  setTimeout(initAnnotations, 300)
+
+  if (initTimeout) {
+    clearTimeout(initTimeout)
+  }
+
+  initTimeout = setTimeout(initAnnotations, 300)
+}
+
+onMounted(async () => {
+  await scheduleInitAnnotations()
+  window.addEventListener('resize', handleResize)
 })
 
 watch(() => route.path, async () => {
-  await nextTick()
-  setTimeout(initAnnotations, 300)
+  // 先清掉上一页残留的 sidebar/模式，避免在 300ms 延迟窗口里闪烁或错误隐藏
+  resetToInlineMode()
+
+  await scheduleInitAnnotations()
 })
 
 onUnmounted(() => {
+  if (initTimeout) {
+    clearTimeout(initTimeout)
+    initTimeout = null
+  }
+
+  window.removeEventListener('resize', handleResize)
   removeAnnotationsSidebar()
+  document.documentElement.classList.remove('annotations-mode--sidebar', 'annotations-mode--inline')
 })
 </script>
 
