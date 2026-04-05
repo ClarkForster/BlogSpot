@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, nextTick, onUnmounted } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import DailyQuoteFooter from './DailyQuoteFooter.vue'
 
 const { frontmatter } = useData()
 const route = useRoute()
@@ -82,6 +83,8 @@ const initAnnotations = () => {
 const setRootAnnotationModeClass = (mode: 'sidebar' | 'inline') => {
   document.documentElement.classList.toggle('annotations-mode--sidebar', mode === 'sidebar')
   document.documentElement.classList.toggle('annotations-mode--inline', mode === 'inline')
+  document.documentElement.classList.toggle('article-layout--coordinated', mode === 'sidebar')
+  document.documentElement.classList.toggle('article-layout--inline', mode === 'inline')
 }
 
 let annotationResizeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -103,20 +106,30 @@ const resetToInlineMode = () => {
 }
 
 const canUseSidebarMode = (): boolean => {
-  if (window.innerWidth < 1440) {
+  const desktopBreakpoint = 1440
+  if (window.innerWidth < desktopBreakpoint) {
     return false
   }
 
+  const layoutContainer = document.querySelector('.VPDoc .container') as HTMLElement | null
   const contentContainer = document.querySelector('.VPDoc .container .content-container') as HTMLElement | null
-  if (!contentContainer) return false
-
-  const rect = contentContainer.getBoundingClientRect()
-  const spaceRight = window.innerWidth - rect.right
+  if (!layoutContainer || !contentContainer) {
+    return false
+  }
 
   const sidebarWidth = 340
-  const safeGap = 48
+  const outlineWidth = 340
+  const sideGap = 48
+  const safePadding = 32
+  const hasOutline = document.querySelector('.VPDoc.has-aside .VPDocAside') !== null
 
-  return spaceRight >= sidebarWidth + safeGap
+  const containerRect = layoutContainer.getBoundingClientRect()
+  const contentRect = contentContainer.getBoundingClientRect()
+  const leftRailWidth = hasOutline ? outlineWidth + sideGap : 0
+  const rightSpace = containerRect.right - contentRect.right
+  const leftSpace = contentRect.left - containerRect.left
+
+  return leftSpace >= leftRailWidth + safePadding && rightSpace >= sidebarWidth + sideGap + safePadding
 }
 
 const attachBlockAnnotationRefsToPreviousBlock = () => {
@@ -129,7 +142,14 @@ const attachBlockAnnotationRefsToPreviousBlock = () => {
     if (next.tagName !== 'BLOCKQUOTE' || !next.classList.contains('annotation-original')) return
 
     let host = ref.previousElementSibling as HTMLElement | null
-    while (host && host.tagName === 'SUP' && host.classList.contains('annotation-ref')) {
+    while (host) {
+      const isAnnotationRef = host.tagName === 'SUP' && host.classList.contains('annotation-ref')
+      const isHiddenAnnotationBlock = host.classList.contains('annotation-original') || host.classList.contains('annotation-original-inline')
+
+      if (!isAnnotationRef && !isHiddenAnnotationBlock) {
+        break
+      }
+
       host = host.previousElementSibling as HTMLElement | null
     }
 
@@ -191,14 +211,12 @@ const createAnnotationsSidebar = () => {
     </div>
   `
 
-  // 添加到 content-container（文章内容容器）而不是外层 container
-  // 这样 right 定位是相对于文章内容的右边缘，位置计算正确
-  const contentContainer = document.querySelector('.VPDoc .container .content-container') as HTMLElement | null
-  if (contentContainer) {
-    sidebarHost = contentContainer
-    sidebarHostPrevPosition = contentContainer.style.position
-    contentContainer.style.position = 'relative'
-    contentContainer.appendChild(annotationsContainer)
+  const layoutContainer = document.querySelector('.VPDoc .container') as HTMLElement | null
+  if (layoutContainer) {
+    sidebarHost = layoutContainer
+    sidebarHostPrevPosition = layoutContainer.style.position
+    layoutContainer.style.position = 'relative'
+    layoutContainer.appendChild(annotationsContainer)
   }
 
   renderAnnotationItems()
@@ -255,21 +273,19 @@ const calculateAnnotationPositions = () => {
   if (!annotations.value.length) return
 
   const refElements = document.querySelectorAll('.annotation-ref')
-  // 注释栏在 content-container 内部，所以相对于 content-container 计算位置
   const contentContainer = document.querySelector('.VPDoc .container .content-container')
   const list = document.querySelector('.annotations-sidebar .annotations-list')
 
   if (!contentContainer || !list) return
 
-  const panelTitleHeight = 48 // .panel-title 高度 + 底部 padding
   const minGap = 16 // 注释之间的最小间距
-  const alignOffset = -80 // 向上偏移：让注释编号和引用标记垂直中心对齐
 
-  // 基准：content-container 相对于整个页面的位置
   const containerRect = contentContainer.getBoundingClientRect()
+  const listRect = (list as HTMLElement).getBoundingClientRect()
   const scrollTop = window.scrollY || document.documentElement.scrollTop
-  const containerTopRelativeToViewport = containerRect.top
-  const containerTop = containerTopRelativeToViewport + scrollTop
+  const containerTop = containerRect.top + scrollTop
+  const listTop = listRect.top + scrollTop
+  const listOffsetFromContainer = listTop - containerTop
 
   // 第一步：先获取所有引用标记的原始位置
   refElements.forEach(el => {
@@ -281,11 +297,8 @@ const calculateAnnotationPositions = () => {
     const elTop = rect.top + scrollTop
     const annotation = annotations.value.find(a => a.id === annotationId)
     if (annotation) {
-      // 计算注释在侧边栏列表中的初始位置：
-      // (引用页面位置 - 容器页面位置) = 引用在容器中的相对位置
-      // 加上 panel 标题高度（已经包含了panel的padding）
-      // 再向上偏移让注释编号和引用标记在同一水平线上
-      annotation.top = Math.max(0, (elTop - containerTop) + panelTitleHeight + alignOffset)
+      const refCenter = elTop + rect.height / 2
+      annotation.top = Math.max(0, refCenter - containerTop - listOffsetFromContainer)
     }
   })
 
@@ -399,7 +412,6 @@ const addEventListeners = () => {
   document.addEventListener('mouseover', handleMouseOver)
   document.addEventListener('mouseout', handleMouseOut)
   document.addEventListener('click', handleAnnotationClick)
-  window.addEventListener('scroll', handleScroll, { passive: true })
 
   // 监听文档内容变化，动态更新注释位置
   const doc = document.querySelector('.vp-doc')
@@ -415,7 +427,6 @@ const removeEventListeners = () => {
   document.removeEventListener('mouseover', handleMouseOver)
   document.removeEventListener('mouseout', handleMouseOut)
   document.removeEventListener('click', handleAnnotationClick)
-  window.removeEventListener('scroll', handleScroll)
 
   if (resizeObserver) {
     resizeObserver.disconnect()
@@ -455,9 +466,6 @@ const handleResize = () => {
   scheduleAnnotationRecompute()
 }
 
-const handleScroll = () => {
-  // 滚动时不需要重新计算，因为sticky定位已经处理了
-}
 
 const highlightAnnotation = (id: string) => {
   clearHighlights()
@@ -532,10 +540,19 @@ onUnmounted(() => {
 
   window.removeEventListener('resize', handleResize)
   removeAnnotationsSidebar()
-  document.documentElement.classList.remove('annotations-mode--sidebar', 'annotations-mode--inline')
+  document.documentElement.classList.remove(
+    'annotations-mode--sidebar',
+    'annotations-mode--inline',
+    'article-layout--coordinated',
+    'article-layout--inline'
+  )
 })
 </script>
 
 <template>
-  <DefaultTheme.Layout />
+  <DefaultTheme.Layout>
+    <template #layout-bottom>
+      <DailyQuoteFooter />
+    </template>
+  </DefaultTheme.Layout>
 </template>

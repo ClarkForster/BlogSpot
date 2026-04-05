@@ -1,4 +1,152 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+.daily-quote-footer {
+  border-top: 1px solid var(--vp-c-divider);
+  margin-top: 2rem;
+  padding: 1rem 1rem 1.25rem;
+  background: var(--vp-c-bg-alt);
+}
+
+.daily-quote-footer__inner {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.daily-quote-footer__quote-wrap {
+  position: relative;
+}
+
+.daily-quote-footer__quote {
+  position: relative;
+  margin: 0;
+  padding: 0.75rem 0.9rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color var(--blog-transition), background-color var(--blog-transition), transform var(--blog-transition), box-shadow var(--blog-transition);
+}
+
+.daily-quote-footer__quote:hover {
+  border-color: var(--blog-hover-border);
+  background: var(--vp-c-bg);
+}
+
+.daily-quote-footer__quote:focus-visible {
+  outline: none;
+  box-shadow: var(--blog-focus-ring);
+  border-color: var(--vp-c-brand-2);
+}
+
+.daily-quote-footer__quote.is-copied {
+  border-color: var(--vp-c-brand-2);
+  background: var(--vp-c-brand-soft);
+}
+
+.daily-quote-footer__content {
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.daily-quote-footer__meta {
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--vp-c-divider);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.82rem;
+}
+
+.daily-quote-footer__author {
+  color: var(--vp-c-text-2);
+  font-weight: 500;
+}
+
+.daily-quote-footer__source {
+  color: var(--vp-c-text-3);
+}
+
+.daily-quote-footer__source::before {
+  content: '·';
+  margin-right: 0.55rem;
+}
+
+.daily-quote-footer__toast {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #fff;
+  font-size: 0.78rem;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  z-index: 1;
+  animation: daily-quote-toast-fade 1.6s ease forwards;
+}
+
+@keyframes daily-quote-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -42%);
+  }
+
+  16% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -58%);
+  }
+}
+
+.dark .daily-quote-footer__toast {
+  background: rgba(248, 250, 252, 0.92);
+  color: #0f172a;
+}
+
+.dark .daily-quote-footer {
+  border-top-color: var(--vp-c-divider);
+  background: rgba(15, 23, 42, 0.72);
+}
+
+@media (max-width: 640px) {
+  .daily-quote-footer {
+    margin-top: 1.5rem;
+    padding: 0.85rem 0.9rem 1rem;
+  }
+
+  .daily-quote-footer__quote {
+    padding: 0.65rem 0.72rem;
+  }
+
+  .daily-quote-footer__content {
+    font-size: 0.93rem;
+  }
+
+  .daily-quote-footer__meta {
+    gap: 0.45rem;
+    font-size: 0.78rem;
+  }
+}
 
 :root {
   --vp-c-brand-1: #3b82f6;
@@ -28,6 +176,10 @@
   --vp-layout-max-width: 1780px;
   --vp-sidebar-width: 240px;
   --blog-content-width: 680px;
+  --article-outline-width: 340px;
+  --article-annotation-width: 340px;
+  --article-side-gap: 48px;
+  --article-safe-padding: 32px;
   --blog-radius: 24px;
   --blog-shadow: 0 18px 50px rgba(148, 163, 184, 0.12);
   --blog-card-border: rgba(226, 232, 240, 0.9);
@@ -193,12 +345,6 @@
     max-width: 180px;
   }
 }
-.dark #busuanzi_value_site_pv,
-.dark #busuanzi_value_site_uv {
-  color: var(--vp-c-text-1);
-  font-weight: 600;
-}
-
 .dark .hero-kicker,
 .dark .standalone-page__eyebrow {
   color: #93c5fd;
@@ -358,7 +504,8 @@ html body div.VPDoc.has-aside div.content-container,
 html body div.VPDoc.has-aside .content-container,
 html body div.VPDoc div.content-container,
 html body div.VPDoc .content-container {
-  max-width: 680px !important;
+  max-width: var(--blog-content-width) !important;
+  margin-inline: auto !important;
 }
 
 html body div.VPDoc .content,
@@ -368,7 +515,7 @@ html body div.VPDoc.has-aside .content {
 
 html body div.VPDoc div.container,
 html body div.VPDoc .container {
-  max-width: 1780px !important;
+  max-width: var(--vp-layout-max-width) !important;
 }
 
 .VPDoc {
@@ -1548,7 +1695,8 @@ html.annotations-mode--sidebar .annotation-ref-host {
 html.annotations-mode--sidebar .annotation-ref--block {
   position: absolute;
   right: 0;
-  bottom: 0.15em;
+  bottom: 0;
+  transform: translateY(20%);
   margin: 0;
   vertical-align: baseline;
   min-width: 1.05rem;
@@ -1564,8 +1712,17 @@ html.annotations-mode--sidebar .annotation-ref--block {
 .annotation-ref.annotation-active {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.15));
   border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.annotation-ref:not(.annotation-ref--block):hover,
+.annotation-ref:not(.annotation-ref--block).annotation-active {
+  transform: translateY(-1px);
+}
+
+html.annotations-mode--sidebar .annotation-ref--block:hover,
+html.annotations-mode--sidebar .annotation-ref--block.annotation-active {
+  transform: translateY(20%);
 }
 
 /* 侧边栏容器 - 相对于文章容器绝对定位，随文章一起滚动 */
@@ -1668,22 +1825,26 @@ html.annotations-mode--sidebar .annotation-ref--block {
 
 /* ========== 注释显示模式（动态切换） ========== */
 /* 默认：inline 模式（安全兜底） */
-html:not(.annotations-mode--sidebar) .annotations-sidebar {
+html.article-layout--inline .annotations-sidebar,
+html:not(.article-layout--coordinated) .annotations-sidebar {
   display: none !important;
 }
 
-html:not(.annotations-mode--sidebar) .annotation-ref {
+html.article-layout--inline .annotation-ref,
+html:not(.article-layout--coordinated) .annotation-ref {
   display: none !important;
 }
 
-html:not(.annotations-mode--sidebar) .vp-doc .annotation-original {
+html.article-layout--inline .vp-doc .annotation-original,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original {
   display: block !important;
   position: relative;
   padding-right: 3.25rem;
   padding-bottom: 1.75rem;
 }
 
-html:not(.annotations-mode--sidebar) .vp-doc .annotation-original::after {
+html.article-layout--inline .vp-doc .annotation-original::after,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original::after {
   content: attr(data-annotation-index);
   position: absolute;
   right: 1rem;
@@ -1703,89 +1864,105 @@ html:not(.annotations-mode--sidebar) .vp-doc .annotation-original::after {
   line-height: 1;
 }
 
-html:not(.annotations-mode--sidebar) .vp-doc .annotation-original-inline {
+html.article-layout--inline .vp-doc .annotation-original-inline,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original-inline {
   display: inline !important;
   color: var(--vp-c-text-2);
   font-size: 0.95em;
 }
 
-/* sidebar 模式：显示索引与右侧注释栏，隐藏原始注释内容 */
-html.annotations-mode--sidebar .annotations-sidebar {
+/* coordinated 模式：显示索引与右侧注释栏，隐藏原始注释内容 */
+html.article-layout--coordinated .annotations-sidebar {
   display: block;
 }
 
-html.annotations-mode--sidebar .annotation-ref {
+html.article-layout--coordinated .annotation-ref {
   display: inline-flex;
 }
 
-@media (min-width: 961px) {
-  html.annotations-mode--sidebar .vp-doc blockquote,
-  html.annotations-mode--sidebar .vp-doc .annotation-original {
-    display: none !important;
-  }
-
-  html.annotations-mode--sidebar .vp-doc .annotation-original-inline {
-    display: none !important;
-  }
+html.article-layout--coordinated .vp-doc .annotation-original,
+html.article-layout--coordinated .vp-doc .annotation-original-inline {
+  display: none !important;
 }
 
-/* sidebar 模式下的布局调整（仅在大屏启用） */
+/* coordinated 模式下的布局调整（仅在大屏启用） */
 @media (min-width: 1440px) {
-  html.annotations-mode--sidebar body div.VPDoc .container,
-  html.annotations-mode--sidebar body div.VPDoc .container {
+  html.article-layout--coordinated body div.VPDoc.has-aside .container {
     position: relative !important;
-    max-width: 1780px !important;
+    max-width: var(--vp-layout-max-width) !important;
+    padding-left: var(--article-safe-padding) !important;
+    padding-right: calc(var(--article-annotation-width) + var(--article-side-gap) + var(--article-safe-padding)) !important;
   }
 
-  html.annotations-mode--sidebar body div.VPDoc.has-aside .content-container,
-  html.annotations-mode--sidebar body div.VPDoc .content-container,
-  html.annotations-mode--sidebar body div.VPDoc.has-aside .content-container,
-  html.annotations-mode--sidebar body div.VPDoc .content-container {
-    max-width: min(680px, calc(100vw - 240px - 340px - 120px)) !important;
-    width: auto !important;
+  html.article-layout--coordinated body div.VPDoc:not(.has-aside) .container {
+    position: relative !important;
+    max-width: var(--vp-layout-max-width) !important;
+    padding-left: var(--article-safe-padding) !important;
+    padding-right: calc(var(--article-annotation-width) + var(--article-side-gap) + var(--article-safe-padding)) !important;
   }
 
-  html.annotations-mode--sidebar body div.VPDoc .content,
-  html.annotations-mode--sidebar body div.VPDoc.has-aside .content {
+  html.article-layout--coordinated .VPDoc.has-aside .aside {
+    order: 1 !important;
+    flex: 0 0 var(--article-outline-width) !important;
+    width: var(--article-outline-width) !important;
+    max-width: var(--article-outline-width) !important;
+    padding-left: 0 !important;
+    padding-right: var(--article-side-gap) !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .aside-container {
+    position: sticky !important;
+    top: calc(var(--vp-nav-height) + 1rem) !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 2rem) !important;
+    padding-top: 0 !important;
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .aside-curtain {
+    display: none !important;
+  }
+
+  html.article-layout--coordinated body div.VPDoc.has-aside .content,
+  html.article-layout--coordinated body div.VPDoc .content {
+    order: 2 !important;
     max-width: 100% !important;
+    min-width: 0 !important;
   }
 
-  html.annotations-mode--sidebar .annotations-sidebar {
-    right: -388px !important; /* 移动到容器外面，留出间隙 */
-  }
-
-  html.annotations-mode--sidebar .VPDoc.has-aside .content-container {
-    margin-left: calc(var(--vp-sidebar-width) + 67px) !important;
-    margin-right: 90px !important;
+  html.article-layout--coordinated body div.VPDoc.has-aside .content-container,
+  html.article-layout--coordinated body div.VPDoc .content-container {
+    max-width: var(--blog-content-width) !important;
+    width: 100% !important;
+    margin-inline: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
 
-  html.annotations-mode--sidebar .VPDoc .VPDocAside {
-    position: fixed !important;
-    left: max(24px, calc((100vw - 1780px) / 2 + 16px)) !important;
-    right: auto !important;
-    top: calc(var(--vp-nav-height) + 1rem) !important;
-    width: var(--vp-sidebar-width) !important;
-    max-height: calc(100vh - var(--vp-nav-height) - 2rem) !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    padding-bottom: 2rem !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1rem !important;
-    padding-top: 1rem !important;
+  html.article-layout--coordinated .annotations-sidebar {
+    position: absolute !important;
+    top: 4px !important;
+    right: var(--article-safe-padding) !important;
+    width: var(--article-annotation-width) !important;
+    z-index: 10 !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .VPDocAside {
+    width: 100% !important;
+    padding: 1rem 1rem 2rem 1.25rem !important;
     background: rgba(255, 255, 255, 0.95) !important;
     border: 1px solid var(--blog-card-border) !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06) !important;
   }
 
-  html.annotations-mode--sidebar .dark .VPDoc .VPDocAside {
+  html.article-layout--coordinated .dark .VPDoc.has-aside .VPDocAside {
     background: rgba(30, 41, 59, 0.95) !important;
     border-color: var(--vp-c-divider-light) !important;
     box-shadow: 0 4px 12px rgba(2, 6, 23, 0.45) !important;
 
-    /* 只在目录区域内提升 outline 链接对比度（不影响正文链接） */
     --vp-c-text-2: #e2e8f0;
     --vp-c-text-1: #ffffff;
   }
