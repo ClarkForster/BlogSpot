@@ -1,0 +1,148 @@
+.daily-quote-footer {
+  border-top: 1px solid var(--vp-c-divider);
+  margin-top: 2rem;
+  padding: 1rem 1rem 1.25rem;
+  background: var(--vp-c-bg-alt);
+}
+
+.daily-quote-footer__inner {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.daily-quote-footer__quote-wrap {
+  position: relative;
+}
+
+.daily-quote-footer__quote {
+  position: relative;
+  margin: 0;
+  padding: 0.75rem 0.9rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color var(--blog-transition), background-color var(--blog-transition), transform var(--blog-transition), box-shadow var(--blog-transition);
+}
+
+.daily-quote-footer__quote:hover {
+  border-color: var(--blog-hover-border);
+  background: var(--vp-c-bg);
+}
+
+.daily-quote-footer__quote:focus-visible {
+  outline: none;
+  box-shadow: var(--blog-focus-ring);
+  border-color: var(--vp-c-brand-2);
+}
+
+.daily-quote-footer__quote.is-copied {
+  border-color: var(--vp-c-brand-2);
+  background: var(--vp-c-brand-soft);
+}
+
+.daily-quote-footer__content {
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.daily-quote-footer__meta {
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--vp-c-divider);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--vp-c-text-2);
+  font-size: 0.82rem;
+}
+
+.daily-quote-footer__author {
+  color: var(--vp-c-text-2);
+  font-weight: 500;
+}
+
+.daily-quote-footer__source {
+  color: var(--vp-c-text-3);
+}
+
+.daily-quote-footer__source::before {
+  content: '·';
+  margin-right: 0.55rem;
+}
+
+.daily-quote-footer__toast {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #fff;
+  font-size: 0.78rem;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  z-index: 1;
+  animation: daily-quote-toast-fade 1.6s ease forwards;
+}
+
+@keyframes daily-quote-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -42%);
+  }
+
+  16% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  78% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -58%);
+  }
+}
+
+.dark .daily-quote-footer__toast {
+  background: rgba(248, 250, 252, 0.92);
+  color: #0f172a;
+}
+
+.dark .daily-quote-footer {
+  border-top-color: var(--vp-c-divider);
+  background: rgba(15, 23, 42, 0.72);
+}
+
+@media (max-width: 640px) {
+  .daily-quote-footer {
+    margin-top: 1.5rem;
+    padding: 0.85rem 0.9rem 1rem;
+  }
+
+  .daily-quote-footer__quote {
+    padding: 0.65rem 0.72rem;
+  }
+
+  .daily-quote-footer__content {
+    font-size: 0.93rem;
+  }
+
+  .daily-quote-footer__meta {
+    gap: 0.45rem;
+    font-size: 0.78rem;
+  }
+}

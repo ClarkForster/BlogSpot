@@ -282,10 +282,10 @@ export default defineConfig({
       text: '最近更新'
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/yourname/blogspot' }
+      { icon: 'github', link: 'https://github.com/ziyang22' }
     ]
   },
   sitemap: {
-    hostname: 'https://example.com'
+    hostname: 'https://zhangwiehao.cn'
   }
 })

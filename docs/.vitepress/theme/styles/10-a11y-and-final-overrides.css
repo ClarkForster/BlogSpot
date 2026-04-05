@@ -1,0 +1,96 @@
+/* ========== 代码块增强对比度 ========== */
+.vp-doc div[class*='language-'] {
+  background-color: var(--code-bg, #f6f8fa) !important;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.vp-doc .shiki {
+  background-color: var(--code-bg, #f6f8fa) !important;
+}
+
+.vp-doc .shiki,
+.vp-doc .shiki span {
+  color: var(--code-text, #24292e) !important;
+}
+
+/* 代码块标题栏 */
+.vp-doc .code-title {
+  background-color: var(--code-bg-dim, #eaeef3) !important;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+/* 支持center标签 */
+.vp-doc center {
+  text-align: center !important;
+  display: block;
+  margin: 0 auto;
+}
+
+/* 自定义居中类 */
+.text-center {
+  text-align: center !important;
+}
+
+.block-center {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* 文章图片居中对齐 */
+.vp-doc img {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(148, 163, 184, 0.12);
+}
+
+/* 图片下方的图注 */
+.vp-doc img + p {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-3);
+  margin-top: -0.5rem;
+  margin-bottom: 2rem;
+}
+
+/* 代码块优化 */
+.vp-doc div[class*='language-'] {
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 表格居中 */
+.vp-doc table {
+  margin: 1.5rem auto;
+  display: table;
+}
+
+/* 调整标题层级样式 */
+.vp-doc h1 {
+  font-size: 2.2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.vp-doc h2 {
+  font-size: 1.8rem;
+  margin-top: 2.2rem;
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--vp-c-divider-light);
+}
+
+.vp-doc h3 {
+  font-size: 1.4rem;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.vp-doc h4 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+}

@@ -1,0 +1,78 @@
+:root {
+  --vp-c-brand-1: #3b82f6;
+  --vp-c-brand-2: #60a5fa;
+  --vp-c-brand-3: #2563eb;
+  --vp-c-brand-4: #93c5fd;
+  --vp-c-brand-dark: #10213a;
+  --vp-c-brand-dark-hover: #1d4ed8;
+  --vp-c-brand-soft: rgba(59, 130, 246, 0.12);
+
+  --vp-c-bg: #fcfdff;
+  --vp-c-bg-alt: #f8fbff;
+  --vp-c-bg-soft: #f4f8fc;
+  --vp-c-bg-mute: #edf4fb;
+  --vp-c-divider: rgba(71, 85, 105, 0.14);
+  --vp-c-divider-light: rgba(148, 163, 184, 0.2);
+
+  --vp-c-text-1: #1e293b;
+  --vp-c-text-2: #475569;
+  --vp-c-text-3: #64748b;
+
+  --vp-font-family-base: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+  --vp-font-family-heading: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  --vp-font-family-ui: 'IBM Plex Sans', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', monospace;
+
+  --vp-layout-max-width: 1780px;
+  --vp-sidebar-width: 240px;
+  --blog-content-width: 680px;
+  --article-outline-width: 340px;
+  --article-annotation-width: 340px;
+  --article-side-gap: 48px;
+  --article-safe-padding: 32px;
+  --blog-radius: 24px;
+  --blog-shadow: 0 18px 50px rgba(148, 163, 184, 0.12);
+  --blog-card-border: rgba(226, 232, 240, 0.9);
+  --blog-hover-border: rgba(96, 165, 250, 0.5);
+  --blog-hover-shadow: 0 18px 38px rgba(96, 165, 250, 0.14);
+  --blog-hover-bg: rgba(248, 251, 255, 0.96);
+  --blog-press-offset: translateY(-2px);
+  --blog-link-underline: rgba(37, 99, 235, 0.24);
+  --blog-link-underline-strong: rgba(37, 99, 235, 0.46);
+  --blog-focus-ring: 0 0 0 3px rgba(96, 165, 250, 0.18);
+  --blog-transition: 0.22s ease;
+  --code-bg: #f6f8fa;
+  --code-bg-dim: #eaeef3;
+  --code-text: #24292e;
+}
+
+/* 暗黑模式 */
+.dark {
+  --vp-c-brand-1: #60a5fa;
+  --vp-c-brand-2: #93c5fd;
+  --vp-c-brand-3: #3b82f6;
+  --vp-c-brand-dark: #f1f5f9;
+  --vp-c-brand-dark-hover: #60a5fa;
+
+  --vp-c-bg: #0f172a;
+  --vp-c-bg-alt: #1e293b;
+  --vp-c-bg-soft: #334155;
+  --vp-c-bg-mute: #1e293b;
+  --vp-c-divider: rgba(148, 163, 184, 0.1);
+  --vp-c-divider-light: rgba(148, 163, 184, 0.15);
+
+  --vp-c-text-1: #f1f5f9;
+  --vp-c-text-2: #cbd5e1;
+  --vp-c-text-3: #94a3b8;
+  --code-bg: #1e293b;
+  --code-text: #e2e8f0;
+
+  --blog-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+  --blog-card-border: rgba(148, 163, 184, 0.2);
+  --blog-hover-border: rgba(96, 165, 250, 0.4);
+  --blog-hover-shadow: 0 18px 38px rgba(0, 0, 0, 0.4);
+  --blog-hover-bg: rgba(30, 41, 59, 0.9);
+  --blog-link-underline: rgba(96, 165, 250, 0.3);
+  --blog-link-underline-strong: rgba(96, 165, 250, 0.5);
+  --blog-focus-ring: 0 0 0 3px rgba(96, 165, 250, 0.3);
+}

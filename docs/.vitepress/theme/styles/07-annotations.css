@@ -1,0 +1,456 @@
+/* Annotation Styles */
+
+.annotation-ref {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  margin: 0 0.2em;
+  padding: 0 0.1875rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(96, 165, 250, 0.08));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 3px;
+  color: var(--vp-c-brand-3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--blog-transition);
+  vertical-align: super;
+}
+
+.annotation-ref:hover,
+.annotation-ref.annotation-active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.15));
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+/* 自定义注释侧边栏 - 放在文档右侧外部，sticky定位随页面滚动 */
+.article-annotation-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 260px;
+  margin-right: calc(-260px - 2rem);
+  z-index: 10;
+}
+
+.article-annotation-sidebar .annotations-panel {
+  position: sticky;
+  top: calc(var(--vp-nav-height) + 2rem);
+  width: 100%;
+  max-height: calc(100vh - var(--vp-nav-height) - 4rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--blog-card-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(96, 165, 250, 0.3) transparent;
+}
+
+.article-annotation-sidebar .annotations-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.article-annotation-sidebar .annotations-panel::-webkit-scrollbar-thumb {
+  background: rgba(96, 165, 250, 0.3);
+  border-radius: 999px;
+}
+
+.article-annotation-sidebar .annotations-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.article-annotation-sidebar .annotations-list {
+  position: relative;
+  min-height: 300px;
+}
+
+/* ========== 简单、稳定的右边栏注释实现 ========== */
+/* 引用标记 */
+.annotation-ref {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  margin: 0 0.2em;
+  padding: 0 0.1875rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(96, 165, 250, 0.08));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 3px;
+  color: var(--vp-c-brand-3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--blog-transition);
+  vertical-align: super;
+}
+
+/* sidebar 模式下：把“块级注释”的索引标记贴到上一段末尾右下角 */
+html.annotations-mode--sidebar .annotation-ref-host {
+  position: relative;
+  padding-right: 2.4rem;
+}
+
+/* 统一标题/正文末尾的块级注释索引样式 */
+html.annotations-mode--sidebar .annotation-ref--block {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translateY(20%);
+  margin: 0;
+  vertical-align: baseline;
+  min-width: 1.05rem;
+  height: 1.05rem;
+  padding: 0 0.1875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 3px;
+}
+
+.annotation-ref:hover,
+.annotation-ref.annotation-active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.15));
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.annotation-ref:not(.annotation-ref--block):hover,
+.annotation-ref:not(.annotation-ref--block).annotation-active {
+  transform: translateY(-1px);
+}
+
+html.annotations-mode--sidebar .annotation-ref--block:hover,
+html.annotations-mode--sidebar .annotation-ref--block.annotation-active {
+  transform: translateY(20%);
+}
+
+/* 侧边栏容器 - 相对于文章容器绝对定位，随文章一起滚动 */
+.annotations-sidebar {
+  position: absolute !important;
+  top: 4px !important;
+  right: -388px !important;
+  width: 340px !important;
+  z-index: 10 !important;
+}
+
+/* 注释面板 - 完全随文章滚动，文章滚到哪里注释就到哪里 */
+.annotations-panel {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--blog-card-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06);
+}
+
+
+/* 注释列表 */
+.annotations-list {
+  position: relative;
+  min-height: 300px;
+}
+
+/* 侧边栏标题 */
+.panel-title {
+  font-family: var(--vp-font-family-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--vp-c-divider);
+}
+
+/* 注释项 */
+.annotation-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  background: var(--vp-c-bg-soft);
+  border-left: 3px solid var(--vp-c-brand-1);
+  border-radius: 8px;
+  transition: background var(--blog-transition), border-color var(--blog-transition), box-shadow var(--blog-transition);
+  cursor: pointer;
+  user-select: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.annotation-item:hover,
+.annotation-item.annotation-active {
+  background: var(--vp-c-bg);
+  border-left-color: var(--vp-c-brand-2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+}
+
+.annotation-item.annotation-active {
+  border-left-width: 4px;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+/* 注释编号 */
+.annotation-number {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8em;
+  height: 1.8em;
+  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-2));
+  border-radius: 50%;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 注释内容 */
+.annotation-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.annotation-content p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--vp-c-text-1);
+}
+
+/* ========== 注释显示模式（动态切换） ========== */
+/* 默认：inline 模式（安全兜底） */
+html.article-layout--inline .annotations-sidebar,
+html:not(.article-layout--coordinated) .annotations-sidebar {
+  display: none !important;
+}
+
+html.article-layout--inline .annotation-ref,
+html:not(.article-layout--coordinated) .annotation-ref {
+  display: none !important;
+}
+
+html.article-layout--inline .vp-doc .annotation-original,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original {
+  display: block !important;
+  position: relative;
+  padding-right: 3.25rem;
+  padding-bottom: 1.75rem;
+}
+
+html.article-layout--inline .vp-doc .annotation-original::after,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original::after {
+  content: attr(data-annotation-index);
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 0.4em;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--vp-c-brand-3);
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+html.article-layout--inline .vp-doc .annotation-original-inline,
+html:not(.article-layout--coordinated) .vp-doc .annotation-original-inline {
+  display: inline !important;
+  color: var(--vp-c-text-2);
+  font-size: 0.95em;
+}
+
+/* coordinated 模式：显示索引与右侧注释栏，隐藏原始注释内容 */
+html.article-layout--coordinated .annotations-sidebar {
+  display: block;
+}
+
+html.article-layout--coordinated .annotation-ref {
+  display: inline-flex;
+}
+
+html.article-layout--coordinated .vp-doc .annotation-original,
+html.article-layout--coordinated .vp-doc .annotation-original-inline {
+  display: none !important;
+}
+
+/* coordinated 模式下的布局调整（仅在大屏启用） */
+@media (min-width: 1440px) {
+  html.article-layout--coordinated body div.VPDoc.has-aside .container {
+    position: relative !important;
+    max-width: var(--vp-layout-max-width) !important;
+    padding-left: var(--article-safe-padding) !important;
+    padding-right: calc(var(--article-annotation-width) + var(--article-side-gap) + var(--article-safe-padding)) !important;
+  }
+
+  html.article-layout--coordinated body div.VPDoc:not(.has-aside) .container {
+    position: relative !important;
+    max-width: var(--vp-layout-max-width) !important;
+    padding-left: var(--article-safe-padding) !important;
+    padding-right: calc(var(--article-annotation-width) + var(--article-side-gap) + var(--article-safe-padding)) !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .aside {
+    order: 1 !important;
+    flex: 0 0 var(--article-outline-width) !important;
+    width: var(--article-outline-width) !important;
+    max-width: var(--article-outline-width) !important;
+    padding-left: 0 !important;
+    padding-right: var(--article-side-gap) !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .aside-container {
+    position: sticky !important;
+    top: calc(var(--vp-nav-height) + 1rem) !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 2rem) !important;
+    padding-top: 0 !important;
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .aside-curtain {
+    display: none !important;
+  }
+
+  html.article-layout--coordinated body div.VPDoc.has-aside .content,
+  html.article-layout--coordinated body div.VPDoc .content {
+    order: 2 !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  html.article-layout--coordinated body div.VPDoc.has-aside .content-container,
+  html.article-layout--coordinated body div.VPDoc .content-container {
+    max-width: var(--blog-content-width) !important;
+    width: 100% !important;
+    margin-inline: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  html.article-layout--coordinated .annotations-sidebar {
+    position: absolute !important;
+    top: 4px !important;
+    right: var(--article-safe-padding) !important;
+    width: var(--article-annotation-width) !important;
+    z-index: 10 !important;
+  }
+
+  html.article-layout--coordinated .VPDoc.has-aside .VPDocAside {
+    width: 100% !important;
+    padding: 1rem 1rem 2rem 1.25rem !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid var(--blog-card-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.06) !important;
+  }
+
+  html.article-layout--coordinated .dark .VPDoc.has-aside .VPDocAside {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: var(--vp-c-divider-light) !important;
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.45) !important;
+
+    --vp-c-text-2: #e2e8f0;
+    --vp-c-text-1: #ffffff;
+  }
+}
+
+/* ========== 响应式设计（其余规则保留） ========== */
+/* 小屏幕（<= 960px）：显示完整blockquote，隐藏其他 */
+@media (max-width: 960px) {
+  .annotations-sidebar {
+    display: none !important;
+  }
+  .annotation-ref {
+    display: none !important;
+  }
+  .vp-doc blockquote,
+  .vp-doc .annotation-original {
+    display: block !important;
+    margin: 1rem 0 !important;
+  }
+
+  /* 行内注释在小屏幕下显示 */
+  .vp-doc .annotation-original-inline {
+    display: inline !important;
+    color: var(--vp-c-text-2);
+    font-size: 0.95em;
+  }
+
+  /* 小屏幕下隐藏引用标记 */
+  .annotation-ref {
+    display: none !important;
+  }
+
+  /* 重置目录定位，使用VitePress默认行为 */
+  .VPDoc .VPDocAside {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    width: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 确保下拉目录菜单显示在左侧 */
+  .VPLocalNav {
+    justify-content: flex-start !important;
+  }
+
+  .VPDocOutlineDropdown {
+    margin-right: auto !important;
+    position: relative !important;
+  }
+
+  /* 确保下拉菜单内容不覆盖文章 - 使用完整路径选择器 */
+  .VPLocalNav .VPDocOutlineDropdown .items,
+  .VPLocalNav .VPDocOutlineDropdown > .items,
+  .VPLocalNav .VPDocOutlineDropdown > div.items,
+  .VPLocalNavOutlineDropdown .items,
+  .VPLocalNavOutlineDropdown > .items,
+  .VPLocalNavOutlineDropdown > div.items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown .items,
+  html body .VPDoc .VPLocalNav .VPDocOutlineDropdown > .items,
+  div[class*="items"] {
+    position: fixed !important;
+    left: 16px !important;
+    top: calc(var(--vp-nav-height) + 48px) !important;
+    max-width: 280px !important;
+    max-height: calc(100vh - var(--vp-nav-height) - 80px) !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+  }
+
+  /* 小屏幕：没有侧边栏，文章可以最宽 */
+  html body div.VPDoc.has-aside .content-container,
+  html body div.VPDoc .content-container,
+  html body div.VPDoc .content-container {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
