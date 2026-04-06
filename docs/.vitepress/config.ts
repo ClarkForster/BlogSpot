@@ -63,6 +63,15 @@ function splitIntoTitleOnlySections(relativePath: string, html: string): SearchS
   }]
 }
 
+function parseFrontmatterDate(value: string): number {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split('-').map(Number)
+    return +new Date(year, month - 1, day)
+  }
+
+  return +new Date(value)
+}
+
 // markdown-it 插件配置
 function annotationPlugin(md: any) {
   // 保存原始的 blockquote 渲染规则
@@ -220,6 +229,40 @@ export default defineConfig({
       pageData.frontmatter.annotations = pageData.env.annotations
     }
 
+    const manualLastUpdated = pageData.frontmatter.lastUpdated
+    const publishDate = pageData.frontmatter.date
+    const effectiveLastUpdated = manualLastUpdated ?? publishDate
+    const normalizedLastUpdated = effectiveLastUpdated instanceof Date
+      ? +effectiveLastUpdated
+      : typeof effectiveLastUpdated === 'string' && effectiveLastUpdated.trim()
+        ? parseFrontmatterDate(effectiveLastUpdated)
+        : undefined
+
+    if (typeof normalizedLastUpdated === 'number' && !Number.isNaN(normalizedLastUpdated)) {
+      pageData.lastUpdated = normalizedLastUpdated
+    }
+
+    const collectionPages = new Map([
+      ['articles.md', 'articles-page'],
+      ['archive.md', 'archive-page']
+    ])
+
+    const collectionPageClass = collectionPages.get(pageData.relativePath)
+
+    if (collectionPageClass) {
+      pageData.frontmatter.layout = 'CollectionPageLayout'
+      pageData.frontmatter.class = collectionPageClass
+      pageData.frontmatter.outline = false
+    }
+
+    if (pageData.relativePath === 'about.md') {
+      pageData.frontmatter.layout = 'StandalonePageLayout'
+      pageData.frontmatter.pageType = 'standalone'
+      pageData.frontmatter.class = 'about-page'
+      pageData.frontmatter.outline = false
+      pageData.frontmatter.standaloneHeader = false
+    }
+
     // 为 resume/ 子页面使用 StandalonePageLayout 作为布局
     if (pageData.relativePath.startsWith('resume/') && pageData.relativePath.endsWith('.md')) {
       pageData.frontmatter.layout = 'StandalonePageLayout'
@@ -252,6 +295,7 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文章', link: '/articles' },
+      { text: '归档', link: '/archive' },
       { text: '简历', link: '/resume' },
       { text: '关于', link: '/about' }
     ],
