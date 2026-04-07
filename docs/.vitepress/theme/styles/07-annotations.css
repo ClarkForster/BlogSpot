@@ -98,14 +98,23 @@
 html.annotations-mode--sidebar .annotation-ref-host {
   position: relative;
   padding-right: 2.4rem;
+  min-width: 0;
+}
+
+html.annotations-mode--sidebar .annotation-ref-stack {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.2rem;
+  transform: translateY(20%);
 }
 
 /* 统一标题/正文末尾的块级注释索引样式 */
 html.annotations-mode--sidebar .annotation-ref--block {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  transform: translateY(20%);
+  position: static;
+  transform: none;
   margin: 0;
   vertical-align: baseline;
   min-width: 1.05rem;
@@ -131,7 +140,7 @@ html.annotations-mode--sidebar .annotation-ref--block {
 
 html.annotations-mode--sidebar .annotation-ref--block:hover,
 html.annotations-mode--sidebar .annotation-ref--block.annotation-active {
-  transform: translateY(20%);
+  transform: none;
 }
 
 /* 侧边栏容器 - 相对于文章容器绝对定位，随文章一起滚动 */

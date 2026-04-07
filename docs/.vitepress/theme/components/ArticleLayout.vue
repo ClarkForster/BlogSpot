@@ -146,6 +146,13 @@ const canUseSidebarMode = (): boolean => {
   return leftSpace >= leftRailWidth + safePadding && rightSpace >= sidebarWidth + sideGap + safePadding
 }
 
+const syncBlockAnnotationHostPadding = (host: HTMLElement, stack: HTMLSpanElement) => {
+  const stackWidth = Math.ceil(stack.getBoundingClientRect().width)
+  const minimumPadding = 38
+  const safeGap = 8
+  host.style.paddingRight = `${Math.max(minimumPadding, stackWidth + safeGap)}px`
+}
+
 const attachBlockAnnotationRefsToPreviousBlock = () => {
   const refs = document.querySelectorAll('sup.annotation-ref:not(.annotation-ref--block)')
   refs.forEach(ref => {
@@ -170,8 +177,27 @@ const attachBlockAnnotationRefsToPreviousBlock = () => {
     if (!host) return
 
     host.classList.add('annotation-ref-host')
+
+    let stack = host.querySelector('.annotation-ref-stack') as HTMLSpanElement | null
+    if (!stack) {
+      stack = document.createElement('span')
+      stack.className = 'annotation-ref-stack'
+      host.appendChild(stack)
+    }
+
     ref.classList.add('annotation-ref--block')
-    host.appendChild(ref)
+    stack.appendChild(ref)
+    syncBlockAnnotationHostPadding(host, stack)
+  })
+
+  const stacks = document.querySelectorAll('.annotation-ref-host .annotation-ref-stack')
+  stacks.forEach((stack) => {
+    if (!(stack instanceof HTMLSpanElement)) return
+
+    const host = stack.parentElement
+    if (!(host instanceof HTMLElement)) return
+
+    syncBlockAnnotationHostPadding(host, stack)
   })
 }
 
