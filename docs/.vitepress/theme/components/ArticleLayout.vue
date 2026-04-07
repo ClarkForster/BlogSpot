@@ -26,8 +26,11 @@ let initTimeout: ReturnType<typeof setTimeout> | null = null
 let sidebarHost: HTMLElement | null = null
 let sidebarHostPrevPosition: string | null = null
 
+const MAX_ANNOTATION_INIT_RETRIES = 6
+const ANNOTATION_INIT_RETRY_DELAY = 250
+
 // 初始化注释
-const initAnnotations = () => {
+const initAnnotations = (retriesLeft = MAX_ANNOTATION_INIT_RETRIES) => {
   annotations.value = []
   isArticleLayout.value = true
 
@@ -42,6 +45,17 @@ const initAnnotations = () => {
     // 降级方案：客户端查找并转换 blockquote
     const blockquotes = document.querySelectorAll('.vp-doc blockquote')
     if (blockquotes.length === 0) {
+      if (retriesLeft > 0) {
+        if (initTimeout) {
+          clearTimeout(initTimeout)
+        }
+
+        initTimeout = setTimeout(() => {
+          initAnnotations(retriesLeft - 1)
+        }, ANNOTATION_INIT_RETRY_DELAY)
+        return
+      }
+
       isArticleLayout.value = false
       resetToInlineMode()
       return
