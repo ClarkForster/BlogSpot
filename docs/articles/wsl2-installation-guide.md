@@ -34,7 +34,7 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 完成后点击确定，并按照系统提示立即重启。
 
-![Windows 可选功能面板](/Photos/wsl2-installation-guide/optional-features.png)
+![Windows 可选功能面板](Photos/wsl2-installation-guide/optional-features.png)
 
 如果你的使用场景还需要更完整的微软虚拟化能力，可以再按需启用 `Hyper-V`，但它并不是 WSL2 首次安装的必选项。
 
@@ -48,7 +48,7 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 `wsl.exe --update`
 
-![执行 wsl.exe --update](/Photos/wsl2-installation-guide/wsl-update.png)
+![执行 wsl.exe --update](Photos/wsl2-installation-guide/wsl-update.png)
 
 安装或更新完成后，可以继续执行下面的命令确认当前版本信息：
 
@@ -56,7 +56,7 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 如果能够正常输出版本号，说明 WSL 组件已经可用。
 
-![查看 WSL 版本信息](/Photos/wsl2-installation-guide/wsl-version.png)
+![查看 WSL 版本信息](Photos/wsl2-installation-guide/wsl-version.png)
 
 ## 安装 Linux 发行版
 
@@ -64,11 +64,11 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 这里以 `Ubuntu 22.04.5 LTS` 为例。
 
-![微软商店中的 Ubuntu 发行版](/Photos/wsl2-installation-guide/ubuntu-store.png)
+![微软商店中的 Ubuntu 发行版](Photos/wsl2-installation-guide/ubuntu-store.png)
 
 下载安装完成后，打开对应的 Linux 发行版。
 
-![首次打开 Ubuntu](/Photos/wsl2-installation-guide/ubuntu-first-launch.png)
+![首次打开 Ubuntu](Photos/wsl2-installation-guide/ubuntu-first-launch.png)
 
 第一次启动时出现初始化加载界面是正常现象，等待完成即可。
 
@@ -80,7 +80,7 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 根据终端提示输入用户名与密码。
 
-![设置 Ubuntu 普通用户](/Photos/wsl2-installation-guide/ubuntu-user-setup.png)
+![设置 Ubuntu 普通用户](Photos/wsl2-installation-guide/ubuntu-user-setup.png)
 
 输入密码时终端不会显示字符，这是 Linux 终端中的正常保密行为。
 
@@ -94,7 +94,7 @@ WSL（Windows Subsystem for Linux）让我们可以直接在 Windows 上运行 L
 
 然后按照提示输入当前用户密码，并为 root 设置新密码。
 
-![设置 root 用户密码](/Photos/wsl2-installation-guide/ubuntu-root-password.png)
+![设置 root 用户密码](Photos/wsl2-installation-guide/ubuntu-root-password.png)
 
 ## 总结
 

@@ -46,7 +46,7 @@ wsl -l -v  # 查看WSL名称及状态，如 Ubuntu_0）
   docker-desktop    Stopped         2
 ```
 
-![image.png](/Photos/wsl-migration/wsl-list.png)
+![image.png](Photos/wsl-migration/wsl-list.png)
 
 这里的 Ubuntu_0 即是待迁移实例名
 
@@ -89,7 +89,7 @@ wsl --import Ubuntu-22.04 D:\WSL D:\Ubuntu-backup.tar --version 2
 
 1. 查看目标路径，若迁移成功，则会出现以下文件
 
-![image.png](/Photos/wsl-migration/imported-files.png)
+![image.png](Photos/wsl-migration/imported-files.png)
 
 1. 执行命令，查看实例是否创建成功
 
@@ -97,7 +97,7 @@ wsl --import Ubuntu-22.04 D:\WSL D:\Ubuntu-backup.tar --version 2
 wsl -l -v
 ```
 
-![image.png](/Photos/wsl-migration/imported-instance.png)
+![image.png](Photos/wsl-migration/imported-instance.png)
 
 Congratulation！迁移成功！
 

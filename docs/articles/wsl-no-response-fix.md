@@ -14,7 +14,7 @@ featured: false
 
 wsl终端无响应，停留在初始化页面（图一）
 
-![image.png](/Photos/wsl-no-response-fix/terminal-hang.png)
+![image.png](Photos/wsl-no-response-fix/terminal-hang.png)
 
 图一
 
@@ -46,7 +46,7 @@ wsl终端无响应，停留在初始化页面（图一）
 
 ### 三、备份重装 WSL 
 
-![image.png](/Photos/wsl-no-response-fix/reinstall-plan.png)
+![image.png](Photos/wsl-no-response-fix/reinstall-plan.png)
 
 ## 解决方案
 

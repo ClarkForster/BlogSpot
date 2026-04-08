@@ -45,7 +45,7 @@ C:\Users\Ziyoung>code --verbose
 
 若存在，则将“_”文件夹中的内容 copy 至外层文件夹内。
 
-![image.png](/Photos/vscode-cannot-open/fix-folder-copy.png)
+![image.png](Photos/vscode-cannot-open/fix-folder-copy.png)
 
 文件复制完后即可正常启动 VSCode 程序。
 
