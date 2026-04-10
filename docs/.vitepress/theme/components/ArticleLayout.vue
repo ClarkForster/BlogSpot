@@ -120,30 +120,9 @@ const resetToInlineMode = () => {
 }
 
 const canUseSidebarMode = (): boolean => {
-  const desktopBreakpoint = 1440
-  if (window.innerWidth < desktopBreakpoint) {
-    return false
-  }
-
-  const layoutContainer = document.querySelector('.VPDoc .container') as HTMLElement | null
-  const contentContainer = document.querySelector('.VPDoc .container .content-container') as HTMLElement | null
-  if (!layoutContainer || !contentContainer) {
-    return false
-  }
-
-  const sidebarWidth = 340
-  const outlineWidth = 340
-  const sideGap = 48
-  const safePadding = 32
-  const hasOutline = document.querySelector('.VPDoc.has-aside .VPDocAside') !== null
-
-  const containerRect = layoutContainer.getBoundingClientRect()
-  const contentRect = contentContainer.getBoundingClientRect()
-  const leftRailWidth = hasOutline ? outlineWidth + sideGap : 0
-  const rightSpace = containerRect.right - contentRect.right
-  const leftSpace = contentRect.left - containerRect.left
-
-  return leftSpace >= leftRailWidth + safePadding && rightSpace >= sidebarWidth + sideGap + safePadding
+  // Keep these breakpoints aligned with 07-annotations.css coordinated-layout media queries.
+  const desktopBreakpoint = 1280
+  return window.innerWidth >= desktopBreakpoint
 }
 
 const syncBlockAnnotationHostPadding = (host: HTMLElement, stack: HTMLSpanElement) => {

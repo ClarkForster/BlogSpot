@@ -25,11 +25,11 @@
 
   --vp-layout-max-width: 1780px;
   --vp-sidebar-width: 240px;
-  --blog-content-width: 680px;
-  --article-outline-width: 340px;
-  --article-annotation-width: 340px;
-  --article-side-gap: 48px;
-  --article-safe-padding: 32px;
+  --blog-content-width: 42.5rem;
+  --article-outline-width: 21.25rem;
+  --article-annotation-width: 21.25rem;
+  --article-side-gap: 3rem;
+  --article-safe-padding: 2rem;
   --blog-radius: 24px;
   --blog-shadow: 0 18px 50px rgba(148, 163, 184, 0.12);
   --blog-card-border: rgba(226, 232, 240, 0.9);
