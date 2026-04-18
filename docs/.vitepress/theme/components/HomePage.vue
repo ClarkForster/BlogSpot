@@ -43,7 +43,13 @@ const formatDate = (value: string) =>
   new Intl.DateTimeFormat('zh-CN', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    ...(value.includes('T')
+      ? {
+          hour: '2-digit',
+          minute: '2-digit'
+        }
+      : {})
   }).format(parseLocalDate(value))
 </script>
 

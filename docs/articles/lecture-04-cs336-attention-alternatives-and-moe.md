@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: CS336 Lecture 04 - 注意力替代方案与混合专家
-date: 2026-04-14
+date: 2026-04-14T14:00:00+08:00
 lastUpdated: 2026-04-14
 category: 人工智能
 description: Stanford CS336 第四讲：从线性注意力、状态空间/混合架构到 Mixture of Experts，理解长上下文时代语言模型如何继续扩展容量与效率。

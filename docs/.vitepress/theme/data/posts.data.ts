@@ -19,10 +19,26 @@ const getMarkdownContent = (url: string): string => {
 
 const normalizeDate = (value: unknown) => {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    return value.toISOString().slice(0, 10)
+    const hasExplicitTime = value.getUTCHours() !== 0
+      || value.getUTCMinutes() !== 0
+      || value.getUTCSeconds() !== 0
+      || value.getUTCMilliseconds() !== 0
+
+    if (hasExplicitTime) {
+      return value.toISOString()
+    }
+
+    const year = value.getUTCFullYear()
+    const month = String(value.getUTCMonth() + 1).padStart(2, '0')
+    const day = String(value.getUTCDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
   }
 
   const text = String(value ?? '').trim()
+
+  if (!text) {
+    return ''
+  }
 
   if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
     return text
@@ -31,7 +47,7 @@ const normalizeDate = (value: unknown) => {
   const parsed = new Date(text)
 
   if (!Number.isNaN(parsed.getTime())) {
-    return parsed.toISOString().slice(0, 10)
+    return text
   }
 
   return ''
@@ -42,8 +58,12 @@ const toTimeValue = (value: string) => {
     return 0
   }
 
-  const [year, month, day] = value.split('-').map(Number)
-  return new Date(year, month - 1, day).getTime()
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [year, month, day] = value.split('-').map(Number)
+    return new Date(year, month - 1, day).getTime()
+  }
+
+  return new Date(value).getTime()
 }
 
 export interface PostRecord {

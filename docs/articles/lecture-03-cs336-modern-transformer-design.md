@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: CS336 Lecture 03 - 现代 Transformer 设计选择
-date: 2026-04-13
+date: 2026-04-14T10:00:00+08:00
 lastUpdated: 2026-04-14
 category: 人工智能
 description: Stanford CS336 第三讲：梳理现代大语言模型在归一化、激活函数、位置编码与超参数上的主流设计选择，理解“为什么今天的 Transformer 长这样”。

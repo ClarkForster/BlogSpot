@@ -48,9 +48,16 @@ const formatDate = (value: string) =>
   }).format(parseLocalDate(value))
 
 const formatDay = (value: string) =>
-  new Intl.DateTimeFormat('zh-CN', {
-    day: '2-digit'
-  }).format(parseLocalDate(value))
+  new Intl.DateTimeFormat('zh-CN', value.includes('T')
+    ? {
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      }
+    : {
+        day: '2-digit'
+      }
+  ).format(parseLocalDate(value))
 
 const monthMetadata = {
   '01': { label: '一月', alias: '寒入翠柳' },
