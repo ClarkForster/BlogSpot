@@ -37,22 +37,50 @@
   margin-right: auto !important;
 }
 
+/* MathJax 辅助层仅用于无障碍，不应在视觉上重复显示公式 */
+.vp-doc mjx-assistive-mml {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.vp-doc mjx-container[jax='SVG'][display='true'],
+.vp-doc mjx-container[jax='SVG'][display='block'] {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+  margin: 1.5rem auto;
+}
+
+.vp-doc mjx-container[jax='SVG'][display='true'] > svg,
+.vp-doc mjx-container[jax='SVG'][display='block'] > svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.vp-doc mjx-container[jax='SVG'][display='inline'] {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 /* 文章图片居中对齐 */
+.vp-doc p:has(> img:only-child) {
+  text-align: center;
+}
+
 .vp-doc img {
   display: block;
   max-width: 100%;
   margin: 1.5rem auto;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(148, 163, 184, 0.12);
-}
-
-/* 图片下方的图注 */
-.vp-doc img + p {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--vp-c-text-3);
-  margin-top: -0.5rem;
-  margin-bottom: 2rem;
 }
 
 /* 代码块优化 */

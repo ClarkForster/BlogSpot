@@ -126,10 +126,56 @@ const canUseSidebarMode = (): boolean => {
 }
 
 const syncBlockAnnotationHostPadding = (host: HTMLElement, stack: HTMLSpanElement) => {
+  if (host.classList.contains('annotation-ref-host--flow')) {
+    host.style.paddingRight = '0px'
+    return
+  }
+
   const stackWidth = Math.ceil(stack.getBoundingClientRect().width)
   const minimumPadding = 38
   const safeGap = 8
   host.style.paddingRight = `${Math.max(minimumPadding, stackWidth + safeGap)}px`
+}
+
+const getHostContentChildren = (element: HTMLElement) =>
+  Array.from(element.children).filter((child) => !(child instanceof HTMLElement && child.classList.contains('annotation-ref-stack')))
+
+const isStandaloneImageParagraph = (element: HTMLElement) => {
+  if (element.tagName !== 'P') {
+    return false
+  }
+
+  const contentChildren = getHostContentChildren(element)
+  return contentChildren.length === 1 && contentChildren[0]?.tagName === 'IMG'
+}
+
+const isStandaloneDisplayMathHost = (element: HTMLElement) => {
+  const contentChildren = getHostContentChildren(element)
+  if (contentChildren.length !== 1) {
+    return false
+  }
+
+  return !!contentChildren[0]?.matches("mjx-container[jax='SVG'][display='true'], mjx-container[jax='SVG'][display='block'], span:has(> mjx-container[jax='SVG'][display='true']), span:has(> mjx-container[jax='SVG'][display='block'])")
+}
+
+const shouldUseFlowAnnotationPlacement = (host: HTMLElement) =>
+  isStandaloneImageParagraph(host) || isStandaloneDisplayMathHost(host)
+
+const findAnnotationHost = (start: HTMLElement | null) => {
+  let host = start
+
+  while (host) {
+    const isAnnotationRef = host.tagName === 'SUP' && host.classList.contains('annotation-ref')
+    const isHiddenAnnotationBlock = host.classList.contains('annotation-original') || host.classList.contains('annotation-original-inline')
+
+    if (!isAnnotationRef && !isHiddenAnnotationBlock) {
+      return host
+    }
+
+    host = host.previousElementSibling as HTMLElement | null
+  }
+
+  return null
 }
 
 const attachBlockAnnotationRefsToPreviousBlock = () => {
@@ -141,21 +187,12 @@ const attachBlockAnnotationRefsToPreviousBlock = () => {
     // 仅处理“块级注释（blockquote）”的引用标记：它在 DOM 中紧邻原始 blockquote
     if (next.tagName !== 'BLOCKQUOTE' || !next.classList.contains('annotation-original')) return
 
-    let host = ref.previousElementSibling as HTMLElement | null
-    while (host) {
-      const isAnnotationRef = host.tagName === 'SUP' && host.classList.contains('annotation-ref')
-      const isHiddenAnnotationBlock = host.classList.contains('annotation-original') || host.classList.contains('annotation-original-inline')
-
-      if (!isAnnotationRef && !isHiddenAnnotationBlock) {
-        break
-      }
-
-      host = host.previousElementSibling as HTMLElement | null
-    }
+    const host = findAnnotationHost(ref.previousElementSibling as HTMLElement | null)
 
     if (!host) return
 
     host.classList.add('annotation-ref-host')
+    host.classList.toggle('annotation-ref-host--flow', shouldUseFlowAnnotationPlacement(host))
 
     let stack = host.querySelector('.annotation-ref-stack') as HTMLSpanElement | null
     if (!stack) {

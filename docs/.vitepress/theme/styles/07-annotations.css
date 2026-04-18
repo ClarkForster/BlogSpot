@@ -101,6 +101,12 @@ html.annotations-mode--sidebar .annotation-ref-host {
   min-width: 0;
 }
 
+html.annotations-mode--sidebar .annotation-ref-host.annotation-ref-host--flow {
+  padding-right: 0;
+  padding-bottom: 0;
+  display: block;
+}
+
 html.annotations-mode--sidebar .annotation-ref-stack {
   position: absolute;
   right: 0;
@@ -109,6 +115,21 @@ html.annotations-mode--sidebar .annotation-ref-stack {
   align-items: flex-end;
   gap: 0.2rem;
   transform: translateY(20%);
+}
+
+html.annotations-mode--sidebar .annotation-ref-host.annotation-ref-host--flow .annotation-ref-stack {
+  position: static;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  clear: both;
+  margin-top: 0.5rem;
+  padding-right: 0.25rem;
+  transform: none;
+}
+
+html.annotations-mode--sidebar .annotation-ref-host.annotation-ref-host--flow .annotation-ref--block {
+  margin-left: 0;
 }
 
 /* 统一标题/正文末尾的块级注释索引样式 */
