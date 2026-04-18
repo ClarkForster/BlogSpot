@@ -17,23 +17,19 @@ const getMarkdownContent = (url: string): string => {
   }
 }
 
-const normalizeDate = (value: unknown) => {
-  if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    const hasExplicitTime = value.getUTCHours() !== 0
-      || value.getUTCMinutes() !== 0
-      || value.getUTCSeconds() !== 0
-      || value.getUTCMilliseconds() !== 0
+const getFrontmatterValue = (markdown: string, key: string) => {
+  const frontmatterMatch = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  const frontmatter = frontmatterMatch?.[1]
 
-    if (hasExplicitTime) {
-      return value.toISOString()
-    }
-
-    const year = value.getUTCFullYear()
-    const month = String(value.getUTCMonth() + 1).padStart(2, '0')
-    const day = String(value.getUTCDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
+  if (!frontmatter) {
+    return undefined
   }
 
+  const fieldMatch = frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))
+  return fieldMatch?.[1]?.trim()
+}
+
+const normalizeDate = (value: unknown) => {
   const text = String(value ?? '').trim()
 
   if (!text) {
@@ -101,10 +97,12 @@ export default createContentLoader('{posts,articles}/*.md', {
           autoExcerpt = body.slice(0, 150).trim()
           if (autoExcerpt.length >= 150) autoExcerpt += '...'
         }
+        const rawDate = getFrontmatterValue(src, 'date')
+
         return {
           title: String(frontmatter.title ?? '未命名文章'),
           url,
-          date: normalizeDate(frontmatter.date),
+          date: normalizeDate(rawDate ?? frontmatter.date),
           description: String(frontmatter.description ?? ''),
           excerpt: autoExcerpt,
           tags: Array.isArray(frontmatter.tags)
